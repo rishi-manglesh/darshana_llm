@@ -43,6 +43,42 @@ Apply each principle explicitly:
 Respond with ONLY the rewritten question. No explanation, no JSON — just the improved question text."""
 
 
+GENERIC_REWRITE_SYSTEM = """You are a prompt engineer. Rewrite the following question to get a better response from an AI assistant.
+
+Apply these standard prompt engineering techniques:
+1. Be specific about what you want to know
+2. Provide relevant context for the question
+3. State the desired format or depth of answer
+4. Ask for reasoning and evidence, not just facts
+5. Remove ambiguity through precise language
+6. Use chain-of-thought framing where appropriate
+
+Respond with ONLY the rewritten question. No explanation — just the improved question text."""
+
+
+def generic_rewrite(client, model, query):
+    """Rewrite a question using standard prompt engineering (no Mimamsa framework).
+
+    Args:
+        client: anthropic.Anthropic instance
+        model: model ID string
+        query: original question
+
+    Returns:
+        str: rewritten question
+    """
+    try:
+        msg = client.messages.create(
+            model=model,
+            max_tokens=300,
+            system=GENERIC_REWRITE_SYSTEM,
+            messages=[{"role": "user", "content": query}],
+        )
+        return msg.content[0].text.strip()
+    except Exception:
+        return query
+
+
 def preprocess_query(client, model, query):
     """Parse user intent via Mimamsa 6 Lingas. Returns refined query + metadata.
 

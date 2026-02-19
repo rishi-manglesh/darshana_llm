@@ -137,6 +137,51 @@ def organize_corpus(documents):
     return organized
 
 
+def bloom_training_order():
+    """Return a Bloom's Taxonomy-based training order (Western curriculum control).
+
+    Bloom's Taxonomy: Remember → Understand → Apply → Analyze → Evaluate → Create.
+    Maps to Samkhya categories by cognitive complexity.
+
+    Returns:
+        list of category names in Bloom's order
+    """
+    return [
+        # Remember: raw facts, definitions
+        "prakriti",
+        # Understand: expert testimony, established knowledge
+        "tanmatra_expert",
+        # Apply: case studies, real-world examples
+        "tanmatra_case",
+        # Analyze: discrimination, comparison, causal analysis
+        "sattva",
+        "rajas",
+        "tamas",
+        # Evaluate: empirical and statistical evidence
+        "tanmatra_empirical",
+        "tanmatra_statistical",
+        # Create: meta-knowledge, methodology, synthesis
+        "purusha",
+        "tanmatra_historical",
+    ]
+
+
+def bloom_ordered_corpus(organized):
+    """Order an organized corpus by Bloom's Taxonomy instead of Samkhya.
+
+    Args:
+        organized: dict mapping category_name -> list of documents (from organize_corpus)
+
+    Returns:
+        list of documents in Bloom's order
+    """
+    ordered = []
+    for cat in bloom_training_order():
+        ordered.extend(organized.get(cat, []))
+    ordered.extend(organized.get("unclassified", []))
+    return ordered
+
+
 def samkhya_training_order():
     """Return the Samkhya-principled training order.
 

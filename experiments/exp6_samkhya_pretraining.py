@@ -1,52 +1,70 @@
 #!/usr/bin/env python3
-"""Exp 1: Samkhya — Pretraining Data Organization
+"""Exp 6: Samkhya — Pretraining Data Organization
 
 LAYER: Pretraining
-VALIDATION: Does organizing training data by Samkhya's 25-tattva categories
-improve a small model vs random data organization?
+RESEARCH FRAMEWORK: Nyaya Pancha-avayava (5-Step Syllogism)
+STATUS: NEVER TESTED — most speculative experiment
 
-Method:
-  1. Continue-pretrain Qwen2.5-0.5B on Samkhya-organized data
-  2. Continue-pretrain Qwen2.5-0.5B on same data in random order
-  3. Evaluate both + base on 30 questions with LLM judge
+PRATIJNA (Thesis):
+  Organizing pretraining data by Samkhya's tattva categories (Purusha/Prakriti ->
+  Gunas -> Tanmatras) produces a better small model than the same data in random order.
 
-Configs:
+HETU (Reason):
+  Samkhya's categories map to a knowledge hierarchy: meta-knowledge (Purusha) ->
+  raw facts (Prakriti) -> analytical mode (Sattva/Rajas/Tamas) -> evidence types
+  (Tanmatras). This order teaches model knowledge ABOUT knowledge before the
+  knowledge itself — similar to curriculum learning in ML.
+
+UDAHARANA (Prior Evidence):
+  - No prior evidence from vedic_llm (never built)
+  - Curriculum learning literature: data ordering can improve small model training
+  - samkhya.py exists with keyword-based categorization
+
+UPANAYA (Experiment Design):
+  4 configs:
   - base: Qwen2.5-0.5B-Instruct, no continued pretraining
-  - samkhya_pretrained: + Samkhya-organized data (~5MB, tattva-ordered)
-  - random_pretrained: + same data, random order
+  - samkhya_ordered: + Samkhya-organized 5MB corpus (tattva-ordered)
+  - random_ordered: + same corpus, shuffled
+  - bloom_ordered: + same corpus, ordered by Bloom's taxonomy (Western control)
 
-Success: samkhya > random on reasoning depth
+  The bloom_ordered control tests: is it ORDERING that helps, or specifically
+  SAMKHYA's ordering?
+
+NIGAMANA (Success Criteria):
+  - PROVEN: samkhya_ordered > random_ordered AND samkhya_ordered > bloom_ordered
+  - PARTIALLY PROVEN: samkhya ≈ bloom > random (ordering helps, Samkhya isn't special)
+  - DISPROVEN: random ≈ samkhya (order doesn't matter at this scale)
+
+Compute: ~4 hrs M4 | Cost: ~$0.30 judge
 """
 
 import argparse
-import json
+import re
 import sys
-import time
 from pathlib import Path
 
-# Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from experiments.utils import (
-    TRANSFER_QUESTIONS, RESULTS_DIR, run_experiment, mean,
-    load_jsonl, append_jsonl,
+    TRANSFER_QUESTIONS, RESULTS_DIR, run_experiment,
 )
 from experiments.judge import run_pairwise_judging
 
 
 # -- Config --------------------------------------------------------------------
 
-EXPERIMENT_NAME = "exp1_samkhya"
+EXPERIMENT_NAME = "exp6_samkhya"
 MODEL_BASE = "Qwen/Qwen2.5-0.5B-Instruct"
 MAX_TOKENS = 512
 
-CONFIGS = ["base", "samkhya_pretrained", "random_pretrained"]
+CONFIGS = ["base", "samkhya_ordered", "random_ordered", "bloom_ordered"]
 
 # Model paths (set after training)
 MODEL_PATHS = {
     "base": MODEL_BASE,
-    "samkhya_pretrained": None,  # Set after running training/pretrain_samkhya.py
-    "random_pretrained": None,   # Set after running training/pretrain_samkhya.py
+    "samkhya_ordered": None,   # Set after running training/pretrain_samkhya.py --mode samkhya
+    "random_ordered": None,    # Set after running training/pretrain_samkhya.py --mode random
+    "bloom_ordered": None,     # Set after running training/pretrain_samkhya.py --mode bloom
 }
 
 
@@ -54,7 +72,6 @@ MODEL_PATHS = {
 
 def generate_local(config, question):
     """Generate a response using a local model via MLX."""
-    import re
     from mlx_lm import load, generate
     from mlx_lm.sample_utils import make_sampler
 
@@ -88,8 +105,8 @@ def generate_local(config, question):
 # -- Main ----------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Exp 1: Samkhya Pretraining")
-    parser.add_argument("--limit", type=int, default=None, help="Limit questions (for smoke test)")
+    parser = argparse.ArgumentParser(description="Exp 6: Samkhya Pretraining Data Organization")
+    parser.add_argument("--limit", type=int, default=None, help="Limit questions (smoke test)")
     parser.add_argument("--judge", action="store_true", help="Run judging after generation")
     parser.add_argument("--judge-model", choices=["haiku", "sonnet"], default="haiku")
     args = parser.parse_args()
@@ -105,9 +122,6 @@ def main():
         print(f"WARNING: Models not yet trained: {missing}")
         print("Run training/pretrain_samkhya.py first for full experiment.")
         print(f"Running with available configs: {available_configs}")
-
-    # We need to cache loaded models to avoid reloading per question
-    _model_cache = {}
 
     def generate_fn(config, question):
         return generate_local(config, question)

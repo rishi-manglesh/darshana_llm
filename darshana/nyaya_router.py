@@ -79,6 +79,76 @@ def classify_pramana(client, model, query):
         }
 
 
+def heuristic_route(query):
+    """Route a query using simple keyword heuristics (no LLM call).
+
+    Searches if query contains date/time references, numbers, names,
+    or currency keywords suggesting current/specific data is needed.
+
+    Args:
+        query: the user query
+
+    Returns:
+        dict with 'use_search' (bool), 'routing_reason'
+    """
+    import re
+    lower = query.lower()
+
+    search_triggers = [
+        # Temporal: current/recent data
+        r"\b(?:latest|current|recent|today|now|202\d|this year|this month)\b",
+        # Specific data lookups
+        r"\b(?:how much|how many|what percent|what rate|statistics|data)\b",
+        # Named entities suggesting factual lookup
+        r"\b(?:who (?:is|was|are)|when (?:did|was|is)|where (?:is|was))\b",
+        # Currency/markets
+        r"\b(?:price|cost|stock|market|gdp|inflation rate)\b",
+    ]
+
+    needs_search = any(re.search(p, lower) for p in search_triggers)
+
+    return {
+        "use_search": needs_search,
+        "pramana": {"pramana": "HEURISTIC", "confidence": 1.0},
+        "routing_reason": f"heuristic_{'search' if needs_search else 'no_search'}",
+    }
+
+
+def model_decides_route(client, model, query):
+    """Let the model itself decide whether search is needed (no framework).
+
+    Args:
+        client: anthropic.Anthropic instance
+        model: model ID string
+        query: the user query
+
+    Returns:
+        dict with 'use_search' (bool), 'routing_reason'
+    """
+    try:
+        msg = client.messages.create(
+            model=model,
+            max_tokens=100,
+            system="You decide whether an external web search would help answer this question. Respond with ONLY a JSON object: {\"needs_search\": true/false, \"reason\": \"<1 sentence>\"}",
+            messages=[{"role": "user", "content": query}],
+        )
+        text = msg.content[0].text.strip()
+        if text.startswith("```"):
+            text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+        result = json.loads(text)
+        return {
+            "use_search": result.get("needs_search", True),
+            "pramana": {"pramana": "MODEL_DECIDES", "confidence": 1.0},
+            "routing_reason": f"model_decides_{'search' if result.get('needs_search', True) else 'no_search'}",
+        }
+    except Exception:
+        return {
+            "use_search": True,
+            "pramana": {"pramana": "MODEL_DECIDES", "confidence": 0.0},
+            "routing_reason": "model_decides_fallback_search",
+        }
+
+
 def route_query(client, model, query, force_search=None):
     """Route a query to the appropriate tool configuration.
 

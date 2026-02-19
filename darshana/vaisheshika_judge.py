@@ -78,6 +78,109 @@ Respond with ONLY a JSON object:
 }"""
 
 
+GENERIC_7DIM_JUDGE_SYSTEM = """You are an expert evaluator assessing response quality on 7 dimensions.
+
+Score the response on these 7 dimensions (1-5 each):
+
+1. ACCURACY: Are the facts and claims correct?
+   1=major errors, 3=mostly correct, 5=fully accurate with verified specifics
+
+2. REASONING: Is the reasoning well-constructed and logically sound?
+   1=logical errors, 3=decent reasoning, 5=rigorous causal/mechanistic analysis
+
+3. COMPLETENESS: Does it address all key aspects of the question?
+   1=misses most aspects, 3=covers basics, 5=comprehensive coverage
+
+4. USEFULNESS: Can someone learn or DO something useful with this information?
+   1=not helpful, 3=decent overview, 5=would significantly improve understanding
+
+5. SPECIFICITY: Does it provide concrete, specific details and examples?
+   1=vague generalities only, 3=some specifics, 5=named examples, numbers, specific mechanisms
+
+6. COHERENCE: Do the parts logically connect into a unified answer?
+   1=disconnected points, 3=loosely connected, 5=every point builds on previous ones
+
+7. GAPS: What important aspects are MISSING from the response?
+   1=major gaps, 3=minor omissions, 5=comprehensive (nothing important missing)
+
+Respond with ONLY a JSON object:
+{
+  "accuracy": <1-5>,
+  "reasoning": <1-5>,
+  "completeness": <1-5>,
+  "usefulness": <1-5>,
+  "specificity": <1-5>,
+  "coherence": <1-5>,
+  "gaps": <1-5>,
+  "total": <sum of all 7>,
+  "assessment": "<1-2 sentence overall assessment>"
+}"""
+
+
+GENERIC_7DIM_PAIRWISE_SYSTEM = """You are an expert evaluator comparing two responses on 7 dimensions.
+
+You will see a QUESTION and two RESPONSES (A and B).
+
+Score EACH response on 7 dimensions (1-5):
+1. ACCURACY — factual correctness
+2. REASONING — logical soundness
+3. COMPLETENESS — coverage of key aspects
+4. USEFULNESS — practical value
+5. SPECIFICITY — concrete details and examples
+6. COHERENCE — logical connection between parts
+7. GAPS — comprehensiveness (nothing important missing)
+
+Respond with ONLY a JSON object:
+{
+  "response_a": {"accuracy": <1-5>, "reasoning": <1-5>, "completeness": <1-5>, "usefulness": <1-5>, "specificity": <1-5>, "coherence": <1-5>, "gaps": <1-5>},
+  "response_b": {"accuracy": <1-5>, "reasoning": <1-5>, "completeness": <1-5>, "usefulness": <1-5>, "specificity": <1-5>, "coherence": <1-5>, "gaps": <1-5>},
+  "winner": "A" or "B" or "TIE",
+  "reason": "<1 sentence>"
+}"""
+
+
+def judge_with_generic_7dim(client, model, query, response):
+    """Judge a single response using the generic 7-dimension framework.
+
+    Args:
+        client: anthropic.Anthropic instance
+        model: model ID string
+        query: the original question
+        response: the response text to judge
+
+    Returns:
+        dict with dimension scores or None on failure
+    """
+    import json
+    import time
+
+    user_content = f"QUESTION: {query}\n\nRESPONSE:\n{response}"
+
+    for attempt in range(3):
+        try:
+            msg = client.messages.create(
+                model=model,
+                max_tokens=500,
+                system=GENERIC_7DIM_JUDGE_SYSTEM,
+                messages=[{"role": "user", "content": user_content}],
+            )
+            text = msg.content[0].text.strip()
+            if text.startswith("```"):
+                text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+            return json.loads(text)
+        except (json.JSONDecodeError, KeyError):
+            if attempt < 2:
+                time.sleep(1)
+                continue
+            return None
+        except Exception:
+            if attempt < 2:
+                time.sleep(2)
+                continue
+            return None
+    return None
+
+
 def judge_with_padarthas(client, model, query, response):
     """Judge a single response using the 7-padartha framework.
 

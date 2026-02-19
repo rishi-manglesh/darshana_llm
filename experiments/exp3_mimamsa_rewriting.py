@@ -1,62 +1,73 @@
 #!/usr/bin/env python3
-"""Exp 4: Mimamsa — Prompt Design Methodology
+"""Exp 3: Mimamsa — 6 Lingas Prompt Rewriting vs Generic Prompt Engineering
 
-LAYER: Prompt design (OFFLINE, not runtime)
-VALIDATION: 6 Lingas as a prompt REWRITING methodology vs generic prompt engineering.
+LAYER: Prompt design (offline preprocessing, not runtime)
+RESEARCH FRAMEWORK: Nyaya Pancha-avayava (5-Step Syllogism)
 
-Method:
-  1. Rewrite 30 questions using Mimamsa 6 Lingas (via Claude)
-  2. Rewrite using generic prompt engineering (via Claude)
-  3. Run all 3 versions through Sonnet, compare outputs
+PRATIJNA (Thesis):
+  Rewriting questions using Mimamsa's 6 Lingas produces higher-quality LLM
+  responses than standard prompt engineering techniques.
 
-Configs (3 x 30 = 90 generations):
-  - original: Original 30 questions -> Sonnet
-  - mimamsa_rewritten: 6 Lingas rewritten -> Sonnet
-  - generic_rewritten: Generic prompt eng rewritten -> Sonnet
+HETU (Reason):
+  The 6 Lingas are a systematic INTERPRETATION framework from 2000+ years of
+  textual exegesis. They capture dimensions generic prompt engineering doesn't:
+  novelty (Apurvata), purpose (Phala), context vs instruction (Arthavada).
 
-Cost: ~$0.60 | Success: mimamsa > generic on response quality
+UDAHARANA (Prior Evidence):
+  - Phase 6: Mimamsa as system prompt: 0% win rate — total failure
+  - Phase 7: full_pipeline (includes Mimamsa preprocessing): 53%
+  - Phase 7: pipeline_no_mimamsa: 40%
+  - Key insight: Mimamsa FAILED as runtime prompt but never tested as OFFLINE rewriter
+  - MIMAMSA_REWRITE_SYSTEM exists but never tested
+
+UPANAYA (Experiment Design):
+  3 configs x 30 questions = 90 generations (API — Claude Sonnet)
+  Step 1: Rewrite all 30 questions three ways (Mimamsa, Generic, Original)
+  Step 2: Send all 90 questions to Sonnet for answers
+  Step 3: Pairwise judge all combinations
+
+NIGAMANA (Success Criteria):
+  - PROVEN: mimamsa_rewritten > generic_rewritten by >10% win rate
+  - DISPROVEN: generic_rewritten >= mimamsa_rewritten
+  - PARTIALLY PROVEN: both > original but mimamsa ≈ generic
+
+Cost: ~$0.60
 """
 
 import argparse
-import json
 import sys
-import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from darshana.mimamsa import rewrite_with_lingas
+from darshana.mimamsa import rewrite_with_lingas, generic_rewrite
 from experiments.utils import (
     TRANSFER_QUESTIONS, RESULTS_DIR, MODELS,
     get_client, call_api, run_experiment,
-    load_jsonl, append_jsonl,
 )
 from experiments.judge import run_pairwise_judging
 
 
 # -- Config --------------------------------------------------------------------
 
-EXPERIMENT_NAME = "exp4_mimamsa"
+EXPERIMENT_NAME = "exp3_mimamsa"
 GENERATION_MODEL = "sonnet"
 REWRITE_MODEL = "sonnet"
 
 CONFIGS = ["original", "mimamsa_rewritten", "generic_rewritten"]
 
-GENERIC_REWRITE_SYSTEM = """You are a prompt engineer. Rewrite the following question to get a better response from an AI assistant.
-
-Apply these standard prompt engineering techniques:
-1. Be specific about what you want
-2. Provide context
-3. State the desired format
-4. Ask for reasoning, not just facts
-5. Remove ambiguity
-
-Respond with ONLY the rewritten question. No explanation — just the improved question text."""
-
 
 # -- Rewriting -----------------------------------------------------------------
 
 _rewrite_cache = {}
+_client = None
+
+
+def _get_client():
+    global _client
+    if _client is None:
+        _client = get_client()
+    return _client
 
 
 def get_rewritten_query(client, config, original_query):
@@ -72,9 +83,7 @@ def get_rewritten_query(client, config, original_query):
     elif config == "mimamsa_rewritten":
         result = rewrite_with_lingas(client, model, original_query)
     elif config == "generic_rewritten":
-        result = call_api(client, model, GENERIC_REWRITE_SYSTEM, original_query, max_tokens=300)
-        if result is None:
-            result = original_query
+        result = generic_rewrite(client, model, original_query)
     else:
         result = original_query
 
@@ -84,19 +93,13 @@ def get_rewritten_query(client, config, original_query):
 
 # -- Generation ----------------------------------------------------------------
 
-_client = None
-
-
 def generate_fn(config, question):
     """Generate a response through Sonnet with the (possibly rewritten) query."""
-    global _client
-    if _client is None:
-        _client = get_client()
-
+    client = _get_client()
     model = MODELS[GENERATION_MODEL]
-    query = get_rewritten_query(_client, config, question["query"])
+    query = get_rewritten_query(client, config, question["query"])
 
-    response = call_api(_client, model, "", query, max_tokens=1024)
+    response = call_api(client, model, "", query, max_tokens=1024)
     if response is None:
         response = "[ERROR: API call failed]"
 
@@ -110,7 +113,7 @@ def generate_fn(config, question):
 # -- Main ----------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Exp 4: Mimamsa Prompt Design")
+    parser = argparse.ArgumentParser(description="Exp 3: Mimamsa 6 Lingas Rewriting")
     parser.add_argument("--limit", type=int, default=None, help="Limit questions")
     parser.add_argument("--judge", action="store_true", help="Run judging")
     parser.add_argument("--judge-model", choices=["haiku", "sonnet"], default="haiku")
@@ -136,8 +139,15 @@ def main():
         print(f"Generic:   {generic}")
 
     if args.judge:
+        # Judge all vs original baseline
         run_pairwise_judging(
             EXPERIMENT_NAME, "original", ["mimamsa_rewritten", "generic_rewritten"],
+            judge_model=args.judge_model,
+        )
+        # Head-to-head: mimamsa vs generic
+        print("\n  --- Mimamsa vs Generic (head-to-head) ---")
+        run_pairwise_judging(
+            EXPERIMENT_NAME, "generic_rewritten", ["mimamsa_rewritten"],
             judge_model=args.judge_model,
         )
 

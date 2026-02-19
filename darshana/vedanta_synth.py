@@ -35,6 +35,57 @@ OUTPUT FORMAT:
 IMPORTANT: This is SYNTHESIS, not summarization. You should INTEGRATE the information into new understanding, not just shorten it."""
 
 
+GENERIC_SYNTHESIS_SYSTEM = """You are a synthesis engine. Take the following multi-stage response — which may contain evidence from web searches, reasoning structure, and various tags — and synthesize it into a clear, unified answer.
+
+Instructions:
+1. Identify the core answer to the original question
+2. Remove scaffolding: strip step labels, tags, search metadata, and other process artifacts
+3. Keep all specific facts, evidence, citations, and concrete examples
+4. Organize by relevance, not by processing order
+5. End with limitations or uncertainties
+
+Output format:
+- Start with the unified core insight (2-3 sentences)
+- Then supporting evidence and details
+- End with nuance/limitations
+- Use clean markdown formatting
+- Preserve all citations and sources
+
+IMPORTANT: This is SYNTHESIS, not summarization. Integrate the information into new understanding, not just shorten it."""
+
+
+def generic_synthesize(client, model, raw_response, original_query, stages=None):
+    """Synthesize a multi-stage pipeline response using generic instructions (no Vedantic framework).
+
+    Args:
+        client: anthropic.Anthropic instance
+        model: model ID string
+        raw_response: the full pipeline output
+        original_query: the original user query
+        stages: optional list of stage names
+
+    Returns:
+        str: synthesized response
+    """
+    stage_context = ""
+    if stages:
+        stage_context = f"\n\nThis response was produced through these stages: {', '.join(stages)}\n"
+
+    user_content = (
+        f"Original question: {original_query}\n"
+        f"{stage_context}"
+        f"\nFull response to synthesize:\n{raw_response}"
+    )
+
+    msg = client.messages.create(
+        model=model,
+        max_tokens=1500,
+        system=GENERIC_SYNTHESIS_SYSTEM,
+        messages=[{"role": "user", "content": user_content}],
+    )
+    return msg.content[0].text.strip()
+
+
 def synthesize_response(client, model, raw_response, original_query, stages=None):
     """Synthesize a multi-stage pipeline response into unified output.
 

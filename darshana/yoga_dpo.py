@@ -153,6 +153,159 @@ Respond with ONLY a JSON object:
 }}"""
 
 
+def reverse_stage_order():
+    """Return Yoga stages in REVERSE Ashtanga order (Samadhi → Yama/Niyama).
+
+    Direct test of whether the order matters: if reverse performs
+    equally well, the specific order is irrelevant.
+
+    Returns:
+        list of stage numbers [5, 4, 3, 2, 1]
+    """
+    return [5, 4, 3, 2, 1]
+
+
+def generic_curriculum_order():
+    """Return a generic complexity-based curriculum order (no Yoga framing).
+
+    Orders DPO pairs by complexity: simple → complex, without using
+    Yoga's specific stage definitions. Uses generic descriptors instead.
+
+    Returns:
+        list of dicts with stage info for generic curriculum
+    """
+    return [
+        {
+            "stage": 1,
+            "name": "Basic accuracy",
+            "dpo_criterion": "factual_correctness",
+            "preferred_traits": [
+                "States only facts that are well-established",
+                "Acknowledges when uncertain",
+                "Does not fabricate examples",
+            ],
+            "rejected_traits": [
+                "Confidently states incorrect information",
+                "Fabricates examples or statistics",
+                "Never acknowledges uncertainty",
+            ],
+        },
+        {
+            "stage": 2,
+            "name": "Clear structure",
+            "dpo_criterion": "structural_clarity",
+            "preferred_traits": [
+                "Well-organized with clear structure",
+                "Logical flow between points",
+                "Consistent formatting",
+            ],
+            "rejected_traits": [
+                "Disorganized, jumps between topics",
+                "No clear structure or progression",
+                "Inconsistent formatting",
+            ],
+        },
+        {
+            "stage": 3,
+            "name": "Relevance",
+            "dpo_criterion": "focus_and_relevance",
+            "preferred_traits": [
+                "Directly addresses the question asked",
+                "Stays on topic throughout",
+                "Every paragraph serves the core question",
+            ],
+            "rejected_traits": [
+                "Goes off on tangents",
+                "Includes irrelevant information",
+                "Pads response with filler content",
+            ],
+        },
+        {
+            "stage": 4,
+            "name": "Depth",
+            "dpo_criterion": "analytical_depth",
+            "preferred_traits": [
+                "Explains WHY and HOW, not just WHAT",
+                "Explores causal chains and implications",
+                "Provides specific evidence for claims",
+            ],
+            "rejected_traits": [
+                "Surface-level overview only",
+                "Lists facts without explanation",
+                "Broad coverage with no depth",
+            ],
+        },
+        {
+            "stage": 5,
+            "name": "Synthesis",
+            "dpo_criterion": "coherent_synthesis",
+            "preferred_traits": [
+                "Ties points together into coherent conclusion",
+                "Shows how different aspects relate",
+                "Provides actionable takeaway or insight",
+            ],
+            "rejected_traits": [
+                "Ends abruptly without conclusion",
+                "Points remain disconnected",
+                "No synthesis or integration",
+            ],
+        },
+    ]
+
+
+GENERIC_DPO_PAIR_GENERATION_PROMPT = """Generate a DPO preference pair for the following question.
+
+QUESTION: {question}
+
+STAGE: {stage_name} ({stage_num}/5)
+QUALITY DIMENSION: {dpo_criterion}
+
+The PREFERRED response should demonstrate:
+{preferred_traits}
+
+The REJECTED response should demonstrate:
+{rejected_traits}
+
+IMPORTANT:
+- Both responses should attempt to answer the question
+- The rejected response is NOT garbage — it's a plausible but inferior answer
+- The quality difference should be SPECIFICALLY about the dimension above
+- Keep each response 150-300 words
+
+Respond with ONLY a JSON object:
+{{
+  "preferred": "the better response text",
+  "rejected": "the worse response text",
+  "quality_dimension": "{dpo_criterion}",
+  "stage": {stage_num}
+}}"""
+
+
+def format_generic_pair_prompt(question, stage_num):
+    """Format a DPO pair generation prompt using generic curriculum (no Yoga framing).
+
+    Args:
+        question: the question text
+        stage_num: 1-5
+
+    Returns:
+        str: formatted prompt for Claude to generate a DPO pair
+    """
+    stages = generic_curriculum_order()
+    stage = stages[stage_num - 1]
+    preferred = "\n".join(f"- {t}" for t in stage["preferred_traits"])
+    rejected = "\n".join(f"- {t}" for t in stage["rejected_traits"])
+
+    return GENERIC_DPO_PAIR_GENERATION_PROMPT.format(
+        question=question,
+        stage_name=stage["name"],
+        stage_num=stage_num,
+        dpo_criterion=stage["dpo_criterion"],
+        preferred_traits=preferred,
+        rejected_traits=rejected,
+    )
+
+
 def format_pair_prompt(question, stage_num):
     """Format a DPO pair generation prompt for a given question and Yoga stage.
 

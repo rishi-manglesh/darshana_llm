@@ -1,56 +1,73 @@
 #!/usr/bin/env python3
-"""Exp 2: Yoga — Post-Training (DPO) Curriculum
+"""Exp 7: Yoga — DPO Curriculum Ordering
 
-LAYER: Post-training
-VALIDATION: Does Yoga's 8-limb training ORDER improve DPO outcomes
-vs standard random-order DPO?
+LAYER: Post-training (DPO alignment)
+RESEARCH FRAMEWORK: Nyaya Pancha-avayava (5-Step Syllogism)
+STATUS: NEVER TESTED — second most speculative experiment
 
-Method:
-  1. Generate 150 DPO preference pairs via Claude (30 questions x 5 stages)
-  2. Train DPO three ways on Qwen2.5-0.5B:
-     - Yoga curriculum: stages in order (Yama -> Niyama -> ... -> Samadhi)
-     - Random DPO: same 150 pairs, shuffled
-     - Standard DPO: 150 generic preference pairs
-  3. Evaluate all 4 on 30 questions
+PRATIJNA (Thesis):
+  Training DPO preference pairs in Yoga's Ashtanga order (ethics -> stability ->
+  focus -> depth -> integration) produces better-aligned models than the same
+  pairs in random order.
 
-Configs:
+HETU (Reason):
+  Yoga's 8 limbs encode a developmental sequence: learn honesty (Yama) before
+  structure (Asana) before focus (Pratyahara) before depth (Dharana) before
+  synthesis (Samadhi). Likewise, an LLM should learn "don't hallucinate" before
+  "reason deeply" before "synthesize coherently."
+
+UDAHARANA (Prior Evidence):
+  - No prior evidence from vedic_llm (never built)
+  - DPO literature: data ordering can matter on small models
+  - yoga_dpo.py exists with 5-stage mapping
+
+UPANAYA (Experiment Design):
+  5 configs:
   - base: Qwen2.5-0.5B-Instruct, no DPO
-  - yoga_dpo: Yoga-ordered DPO (150 pairs, curriculum order)
-  - random_dpo: same 150 pairs, shuffled
-  - standard_dpo: 150 generic preference pairs
+  - yoga_ordered: 150 pairs in Ashtanga stage order
+  - random_ordered: Same 150 pairs, shuffled
+  - reverse_ordered: Same 150 pairs, REVERSE Ashtanga order (synthesis -> ethics)
+  - generic_curriculum: 150 pairs ordered by complexity (simple -> complex) without Yoga
 
-Success: yoga_dpo > random_dpo > base. Yoga order matters.
+  reverse_ordered directly tests whether the ORDER matters.
+  generic_curriculum tests whether Yoga's specific ordering adds value beyond
+  "easy first."
+
+NIGAMANA (Success Criteria):
+  - PROVEN: yoga_ordered > random_ordered AND yoga_ordered > generic_curriculum
+  - PARTIALLY PROVEN: yoga ≈ generic > random (ordering helps, Yoga isn't special)
+  - DISPROVEN: random ≈ yoga (DPO pair order doesn't matter on small models)
+
+Compute: ~8 hrs M4 (4 DPO runs) | Cost: ~$1.05
 """
 
 import argparse
-import json
 import re
 import sys
-import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from experiments.utils import (
     TRANSFER_QUESTIONS, RESULTS_DIR, run_experiment,
-    load_jsonl, append_jsonl,
 )
 from experiments.judge import run_pairwise_judging
 
 
 # -- Config --------------------------------------------------------------------
 
-EXPERIMENT_NAME = "exp2_yoga"
+EXPERIMENT_NAME = "exp7_yoga"
 MODEL_BASE = "Qwen/Qwen2.5-0.5B-Instruct"
 MAX_TOKENS = 512
 
-CONFIGS = ["base", "yoga_dpo", "random_dpo", "standard_dpo"]
+CONFIGS = ["base", "yoga_ordered", "random_ordered", "reverse_ordered", "generic_curriculum"]
 
 MODEL_PATHS = {
     "base": MODEL_BASE,
-    "yoga_dpo": None,      # Set after running training/train_dpo.py --mode yoga
-    "random_dpo": None,     # Set after running training/train_dpo.py --mode random
-    "standard_dpo": None,   # Set after running training/train_dpo.py --mode standard
+    "yoga_ordered": None,         # Set after training/train_dpo.py --mode yoga
+    "random_ordered": None,       # Set after training/train_dpo.py --mode random
+    "reverse_ordered": None,      # Set after training/train_dpo.py --mode reverse
+    "generic_curriculum": None,   # Set after training/train_dpo.py --mode generic
 }
 
 
@@ -91,7 +108,7 @@ def generate_local(config, question):
 # -- Main ----------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Exp 2: Yoga DPO Curriculum")
+    parser = argparse.ArgumentParser(description="Exp 7: Yoga DPO Curriculum Ordering")
     parser.add_argument("--limit", type=int, default=None, help="Limit questions")
     parser.add_argument("--judge", action="store_true", help="Run judging")
     parser.add_argument("--judge-model", choices=["haiku", "sonnet"], default="haiku")

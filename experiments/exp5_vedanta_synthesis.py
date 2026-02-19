@@ -1,21 +1,44 @@
 #!/usr/bin/env python3
-"""Exp 7: Vedanta — Deep Synthesis
+"""Exp 5: Vedanta — Deep Synthesis vs Generic Cleanup
 
-LAYER: Output synthesis
-VALIDATION: LLM-powered Vedantic synthesis vs crude regex formatting.
+LAYER: Output synthesis / post-processing
+RESEARCH FRAMEWORK: Nyaya Pancha-avayava (5-Step Syllogism)
 
-Use Phase 7's full_pipeline output as input (already generated):
+PRATIJNA (Thesis):
+  Vedantic synthesis (Brahman/Maya/Atman) produces higher-quality output from
+  multi-stage pipeline responses than generic "clean this up" post-processing.
 
-Configs:
-  - crude_format: Regex cleanup (the formatter that achieved 100%)
-  - vedanta_synthesis: LLM call using Brahman/Maya/Atman framework
-  - no_format: Raw pipeline (the 53% version)
+HETU (Reason):
+  Vedanta's three operations are SEMANTICALLY distinct:
+  - Brahman (unity): Find the single truth across all evidence — INTEGRATION, not summarization
+  - Maya (scaffolding removal): Distinguish process artifacts from content
+  - Atman (core insight): Extract what persists after details fade
 
-Cost: ~$0.30 | Success: vedanta > crude on usefulness
+UDAHARANA (Prior Evidence):
+  - Phase 7: raw full_pipeline = 53% (worse than coin flip)
+  - Phase 7: pipeline_clean (regex formatter) = 100%
+  - The 53% -> 100% jump was pure formatting, not intellectual synthesis
+  - vedanta_synth.py exists but never tested
+  - Key question: Does Vedanta synthesis ADD intellectual value?
+
+UPANAYA (Experiment Design):
+  Use Phase 7's 30 full_pipeline responses as input, process 4 ways:
+  - raw: No post-processing (the 53% version)
+  - regex_format: Regex cleanup via formatter.py (the 100% version)
+  - vedanta_synth: Vedantic synthesis (Brahman/Maya/Atman)
+  - generic_synth: "Synthesize into clear, unified answer. Remove scaffolding."
+
+  Critical test: vedanta_synth vs generic_synth.
+
+NIGAMANA (Success Criteria):
+  - PROVEN: vedanta_synth > generic_synth by >10% AND vedanta_synth >= regex_format
+  - DISPROVEN: generic_synth ≈ vedanta_synth (any synthesis helps, Vedanta isn't special)
+  - PARTIALLY PROVEN: vedanta > generic but < regex (deep synthesis worse than formatting)
+
+Cost: ~$0.50
 """
 
 import argparse
-import json
 import sys
 import time
 from collections import defaultdict
@@ -24,7 +47,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from darshana.formatter import clean_format
-from darshana.vedanta_synth import synthesize_response
+from darshana.vedanta_synth import synthesize_response, generic_synthesize
 from experiments.utils import (
     RESULTS_DIR, MODELS, DATA_DIR,
     get_client, load_jsonl, append_jsonl, load_existing_keys, mean,
@@ -34,17 +57,16 @@ from experiments.judge import run_pairwise_judging
 
 # -- Config --------------------------------------------------------------------
 
-EXPERIMENT_NAME = "exp7_vedanta"
+EXPERIMENT_NAME = "exp5_vedanta"
 PHASE7_DATA = DATA_DIR / "phase7_outputs" / "pipeline_results.jsonl"
 SYNTHESIS_MODEL = "sonnet"
 
-CONFIGS = ["no_format", "crude_format", "vedanta_synthesis"]
+CONFIGS = ["raw", "regex_format", "vedanta_synth", "generic_synth"]
 
 
 def load_pipeline_records():
     """Load Phase 7 full_pipeline records (the 53% raw version)."""
     all_records = load_jsonl(PHASE7_DATA)
-    # Get full_pipeline records (these have the raw unformatted output)
     pipeline = [r for r in all_records if r["config"] == "full_pipeline"]
     if not pipeline:
         print("ERROR: No full_pipeline records found in Phase 7 data.")
@@ -55,7 +77,7 @@ def load_pipeline_records():
 # -- Processing ----------------------------------------------------------------
 
 def process_records(pipeline_records, limit=None):
-    """Apply three formatting strategies to pipeline records."""
+    """Apply four formatting/synthesis strategies to pipeline records."""
     client = get_client()
     model = MODELS[SYNTHESIS_MODEL]
 
@@ -84,16 +106,18 @@ def process_records(pipeline_records, limit=None):
             if key in existing:
                 continue
 
-            if config == "no_format":
-                # Raw pipeline output, no processing
+            if config == "raw":
                 response = raw_response
-            elif config == "crude_format":
-                # The formatter stage (crude Vedanta)
+            elif config == "regex_format":
                 response = clean_format(client, model, raw_response, query)
-            elif config == "vedanta_synthesis":
-                # Deep Vedantic synthesis
+            elif config == "vedanta_synth":
                 stages = rec.get("stages", [])
                 response = synthesize_response(
+                    client, model, raw_response, query, stages=stages
+                )
+            elif config == "generic_synth":
+                stages = rec.get("stages", [])
+                response = generic_synthesize(
                     client, model, raw_response, query, stages=stages
                 )
 
@@ -123,7 +147,7 @@ def process_records(pipeline_records, limit=None):
 # -- Main ----------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Exp 7: Vedanta Deep Synthesis")
+    parser = argparse.ArgumentParser(description="Exp 5: Vedanta Deep Synthesis")
     parser.add_argument("--limit", type=int, default=None, help="Limit records")
     parser.add_argument("--judge", action="store_true", help="Run judging")
     parser.add_argument("--judge-model", choices=["haiku", "sonnet"], default="haiku")
@@ -152,9 +176,16 @@ def main():
             print(f"  {cfg:<22} | avg words: {avg_words:.0f} | n={len(recs)}")
 
     if args.judge:
+        # Judge all vs raw baseline
         run_pairwise_judging(
-            EXPERIMENT_NAME, "no_format",
-            ["crude_format", "vedanta_synthesis"],
+            EXPERIMENT_NAME, "raw",
+            ["regex_format", "vedanta_synth", "generic_synth"],
+            judge_model=args.judge_model,
+        )
+        # Head-to-head: vedanta vs generic synthesis
+        print("\n  --- Vedanta vs Generic Synthesis (head-to-head) ---")
+        run_pairwise_judging(
+            EXPERIMENT_NAME, "generic_synth", ["vedanta_synth"],
             judge_model=args.judge_model,
         )
 

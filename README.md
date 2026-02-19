@@ -1,42 +1,48 @@
-# darshana_llm — Validate All 7 Darshanas at Their Correct Layers
+# darshana_llm — Rigorous Validation of 7 Darshanas
 
-Research project validating that each of the 7 Darshanas (schools of Indian philosophy) maps to a specific layer of the LLM stack. Successor to **vedic_llm** (8 phases, 1,959+ generations, 13 experiments).
+Research project testing whether the 7 Darshanas (schools of Indian philosophy) provide **specific, measurable value** when mapped to LLM stack layers — or whether generic equivalents work just as well.
 
-## The Mapping
+Successor to **vedic_llm** (8 phases, 1,959+ generations, 13 experiments).
 
-```
-DARSHANA              LLM LAYER              VALIDATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Samkhya (categories)  Pretraining data       Tattva-organized data vs random
-Yoga (8 limbs)        Post-training (DPO)    Yoga curriculum order vs random DPO
-Vritti (5 modes)      System prompt          Transfer to Qwen2.5-7B
-Mimamsa (6 Lingas)    Prompt design          Rewrite prompts with 6 Lingas
-Nyaya (4 pramanas)    Tool routing           Pramana classification reduces redundancy
-Vaisheshika (7 padarthas) Evaluation         7-padartha judge vs 5-dimension judge
-Vedanta (synthesis)   Output synthesis       LLM Vedantic synthesis vs regex
-```
+## Research Framework: Nyaya Pancha-avayava
+
+Every experiment follows the 5-step Nyaya syllogism:
+
+| Step | Sanskrit | Scientific Equivalent | What We Write |
+|------|----------|----------------------|---------------|
+| 1. PRATIJNA | Thesis | Hypothesis | What do we claim? |
+| 2. HETU | Reason | Theoretical basis | WHY should this be true? |
+| 3. UDAHARANA | Evidence | Prior evidence | What do we already know? |
+| 4. UPANAYA | Application | Experiment design | How do we test it? |
+| 5. NIGAMANA | Conclusion | Success criteria | What constitutes proof? |
+
+**Mandatory control:** Each Darshana technique is tested against a GENERIC equivalent of equal sophistication. We're proving "THIS Darshana approach > best generic approach," not "system prompt > no system prompt."
+
+## The 7 Experiments
+
+| Exp | Darshana | LLM Layer | Darshana Approach | Generic Control | Cost |
+|-----|----------|-----------|-------------------|-----------------|------|
+| 1 | Vritti | System prompt | 5-mode epistemic taxonomy | "Tag confidence level" | $0.50 |
+| 2 | Nyaya | Tool routing | 4-pramana classification | Keyword heuristic | $1.00 |
+| 3 | Mimamsa | Prompt design | 6 Lingas rewriting | Standard prompt eng | $0.60 |
+| 4 | Vaisheshika | Evaluation | 7 padarthas | Generic 7-dimension | $0.50 |
+| 5 | Vedanta | Output synthesis | Brahman/Maya/Atman | "Clean this up" | $0.50 |
+| 6 | Samkhya | Pretraining | Tattva-ordered data | Bloom's taxonomy | $0.30 |
+| 7 | Yoga | Post-training DPO | Ashtanga curriculum | Complexity curriculum | $1.05 |
+
+**Total:** ~$4.45 API + ~12 hrs M4 compute
 
 ## Prior Results (from vedic_llm)
 
-| Finding | Phase | Win Rate |
-|---------|-------|----------|
-| System prompts match LoRA adapters | 4 | 3/3 PASS |
-| Vritti epistemic tagging | 6-7 | 63% (4B) → 90% (Sonnet) → 100% (pipeline_clean) |
-| 6 Darshanas → 6 LLM components | 7 | Corrected mapping validated |
-| 57% of tool searches redundant | 7 | Opportunity for Nyaya routing |
-
-## 7 Experiments
-
-| Exp | Darshana | Layer | Model | Compute | API Cost |
-|-----|----------|-------|-------|---------|----------|
-| 1 | Samkhya | Pretraining | Qwen2.5-0.5B | ~2 hrs M4 | $0.30 |
-| 2 | Yoga | Post-training (DPO) | Qwen2.5-0.5B | ~6 hrs M4 | $1.05 |
-| 3 | Vritti | System prompt | Qwen2.5-7B | ~2 hrs M4 | $0.30 |
-| 4 | Mimamsa | Prompt design | Sonnet (API) | — | $0.60 |
-| 5 | Nyaya | Tool routing | Sonnet (API) | — | $0.80 |
-| 6 | Vaisheshika | Evaluation | Sonnet (API) | — | $0.30 |
-| 7 | Vedanta | Synthesis | Sonnet (API) | — | $0.30 |
-| **Total** | | | | **~10 hrs M4** | **~$3.65** |
+| Darshana | Status | Honest Finding |
+|----------|--------|----------------|
+| Vritti | PROVEN (vs bare) | 63%→90%→100% win rate. But never tested vs generic confidence tagging. |
+| Nyaya | MIXED | 70% win rate BUT 57% search redundancy, +3.4% factual gain |
+| Mimamsa | FAILED | 0% win rate as system prompt. Never tested as rewriter. |
+| Vaisheshika | UNTESTED | Only regex counter built. Never tested as judge. |
+| Vedanta | UNTESTED | Only regex formatter built. Never tested as synthesis. |
+| Samkhya | NEVER BUILT | No experiment exists |
+| Yoga | NEVER BUILT | No experiment exists |
 
 ## Quick Start
 
@@ -46,79 +52,105 @@ cd /Users/rishimanglesh/Projects/darshana_llm
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Smoke test any experiment (3 questions)
-python experiments/exp3_vritti_transfer.py --limit 3
-python experiments/exp4_mimamsa_design.py --limit 3
-python experiments/exp5_nyaya_routing.py --limit 3
-python experiments/exp6_vaisheshika_eval.py --limit 3
-python experiments/exp7_vedanta_synthesis.py --limit 3
+# Smoke test any API experiment (3 questions)
+python experiments/exp1_vritti_vs_generic.py --limit 3
+python experiments/exp2_nyaya_routing.py --limit 3
+python experiments/exp3_mimamsa_rewriting.py --limit 3
+python experiments/exp4_vaisheshika_judge.py --limit 3
+python experiments/exp5_vedanta_synthesis.py --limit 3
 
 # Full experiment + judging
-python experiments/exp3_vritti_transfer.py --judge
-python experiments/exp5_nyaya_routing.py --judge
+python experiments/exp1_vritti_vs_generic.py --judge
+python experiments/exp2_nyaya_routing.py --judge
 
 # Training experiments (require data preparation first)
-python training/prepare_samkhya_data.py          # Exp 1: fetch corpus
-python training/pretrain_samkhya.py               # Exp 1: train models
-python experiments/exp1_samkhya_pretraining.py --judge
+python training/prepare_samkhya_data.py          # Exp 6: fetch corpus
+python training/pretrain_samkhya.py               # Exp 6: train models
+python experiments/exp6_samkhya_pretraining.py --judge
 
-python training/generate_dpo_pairs.py             # Exp 2: generate pairs
-python training/train_dpo.py                      # Exp 2: train DPO
-python experiments/exp2_yoga_posttraining.py --judge
+python training/generate_dpo_pairs.py             # Exp 7: generate pairs
+python training/train_dpo.py                      # Exp 7: train DPO
+python experiments/exp7_yoga_dpo.py --judge
 ```
 
 ## Project Structure
 
 ```
 darshana_llm/
-├── darshana/                    # Core modules (6 from vedic_llm + 5 new)
-│   ├── vritti.py               # Epistemic tags (from vedic_llm)
-│   ├── nyaya.py                # Syllogism + tools (from vedic_llm)
-│   ├── mimamsa.py              # 6 Lingas (from vedic_llm + rewrite extension)
-│   ├── vaisheshika.py          # Structure extraction (from vedic_llm)
-│   ├── formatter.py            # Output formatter (from vedic_llm)
-│   ├── search.py               # Web search (from vedic_llm)
-│   ├── samkhya.py              # Taxonomy/data organization (NEW)
-│   ├── yoga_dpo.py             # DPO curriculum templates (NEW)
-│   ├── nyaya_router.py         # Pramana-based routing (NEW)
-│   ├── vaisheshika_judge.py    # 7-padartha judge (NEW)
-│   └── vedanta_synth.py        # Deep synthesis (NEW)
+├── darshana/                    # Core modules (each with Darshana + generic control)
+│   ├── vritti.py               # Epistemic tags + GENERIC_CONFIDENCE_PROMPT
+│   ├── nyaya.py                # Syllogism + tools
+│   ├── nyaya_router.py         # Pramana routing + heuristic_route()
+│   ├── mimamsa.py              # 6 Lingas + generic_rewrite()
+│   ├── vaisheshika.py          # Structure extraction (regex metrics)
+│   ├── vaisheshika_judge.py    # 7-padartha judge + generic 7-dim judge
+│   ├── vedanta_synth.py        # Vedantic synthesis + generic_synthesize()
+│   ├── samkhya.py              # Tattva organization + bloom_ordered_corpus()
+│   ├── yoga_dpo.py             # Ashtanga DPO + reverse/generic curriculum
+│   ├── formatter.py            # Output formatter
+│   └── search.py               # Wikipedia + DuckDuckGo search
 │
-├── experiments/                 # 7 experiment scripts
+├── experiments/                 # 7 experiment scripts (redesigned with proper controls)
 │   ├── utils.py                # 30 questions, metrics, API helpers
 │   ├── judge.py                # LLM-judge infrastructure
-│   └── exp[1-7]_*.py           # Individual experiments
+│   ├── exp1_vritti_vs_generic.py    # Vritti 5-mode vs generic confidence
+│   ├── exp2_nyaya_routing.py        # Pramana vs heuristic vs model-decides
+│   ├── exp3_mimamsa_rewriting.py    # 6 Lingas vs generic prompt engineering
+│   ├── exp4_vaisheshika_judge.py    # 7-padartha vs 5-dim vs generic 7-dim
+│   ├── exp5_vedanta_synthesis.py    # Brahman/Maya/Atman vs generic cleanup
+│   ├── exp6_samkhya_pretraining.py  # Tattva order vs Bloom's vs random
+│   └── exp7_yoga_dpo.py             # Ashtanga order vs generic vs reverse
 │
 ├── training/                    # Pre/post-training scripts
 │   ├── prepare_samkhya_data.py # Fetch & organize training corpus
-│   ├── pretrain_samkhya.py     # Continued pretraining (Exp 1)
-│   ├── generate_dpo_pairs.py   # Create Yoga DPO pairs (Exp 2)
-│   ├── train_dpo.py            # Run DPO training (Exp 2)
+│   ├── pretrain_samkhya.py     # Continued pretraining (Exp 6)
+│   ├── generate_dpo_pairs.py   # Create DPO pairs (Exp 7)
+│   ├── train_dpo.py            # Run DPO training (Exp 7)
 │   └── eval_trained.py         # Quick model evaluation
 │
 ├── data/
 │   ├── questions.json          # 30 canonical transfer questions
-│   └── phase7_outputs/         # vedic_llm Phase 7 data (for Exps 6, 7)
+│   └── phase7_outputs/         # vedic_llm Phase 7 data (for Exps 4, 5)
 │
-└── results/                     # Experiment outputs (exp1-exp7)
+└── results/                     # Experiment outputs
+    ├── exp1_vritti/             # Vritti vs generic
+    ├── exp2_nyaya/              # Nyaya routing
+    ├── exp3_mimamsa/            # Mimamsa rewriting
+    ├── exp4_vaisheshika/        # Vaisheshika judge discrimination
+    ├── exp5_vedanta/            # Vedanta synthesis
+    ├── exp6_samkhya/            # Samkhya pretraining
+    └── exp7_yoga/               # Yoga DPO
 ```
 
 ## Execution Order
 
 ```
-Day 1:  Exp 3 (Vritti transfer)     — local, quick
-        Exp 6 (Vaisheshika judge)    — reuses existing data
-        Exp 7 (Vedanta synthesis)    — reuses Phase 7 output
+PHASE 2 — FAST EXPERIMENTS (API-only, reuse existing data):
+  Exp 1: Vritti vs Generic         (~$0.50, ~20 min)
+  Exp 4: Vaisheshika Judge         (~$0.50, ~15 min, reuses Phase 7 data)
+  Exp 5: Vedanta Synthesis         (~$0.50, ~15 min, reuses Phase 7 data)
 
-Day 2:  Exp 4 (Mimamsa design)      — API, straightforward
-        Exp 5 (Nyaya routing)        — API, most interesting
+PHASE 3 — API EXPERIMENTS (need new generations):
+  Exp 2: Nyaya Routing             (~$1.00, ~30 min)
+  Exp 3: Mimamsa Rewriting         (~$0.60, ~20 min)
 
-Day 3:  Exp 1 (Samkhya pretraining) — needs corpus + training
-        Exp 2 (Yoga DPO)            — needs pairs + 3 training runs
+PHASE 4 — TRAINING EXPERIMENTS (need compute):
+  Exp 6: Samkhya Pretraining       (~$0.30 + 4 hrs M4)
+  Exp 7: Yoga DPO                  (~$1.05 + 8 hrs M4)
 ```
+
+## Verification
+
+For each experiment:
+1. Results written to `results/exp{N}_{name}/results.jsonl`
+2. Each result includes all dimension scores + winner
+3. Summary report with PRATIJNA→NIGAMANA format
+4. Honest assessment: PROVEN / DISPROVEN / INCONCLUSIVE
+
+After all 7 experiments: only PROVEN Darshanas go into the integrated pipeline.
 
 ## Version
 
-- **Created:** 2026-02-19
+- **Created:** 2026-02-19 (v2.0 — Redesigned with proper generic controls)
 - **Predecessor:** vedic_llm (archived, 8 phases complete)
 - **Owner:** Rishi Raj Manglesh
