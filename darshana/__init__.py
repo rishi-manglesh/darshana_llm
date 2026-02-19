@@ -32,3 +32,9 @@ from .vaisheshika_judge import PADARTHA_JUDGE_SYSTEM, judge_with_padarthas
 from .vaisheshika_judge import GENERIC_7DIM_JUDGE_SYSTEM, judge_with_generic_7dim
 from .vedanta_synth import synthesize_response, VEDANTA_SYNTHESIS_SYSTEM
 from .vedanta_synth import GENERIC_SYNTHESIS_SYSTEM, generic_synthesize
+from .vaisheshika_ontology import (
+    extract_padarthas, extract_generic,
+    build_padartha_graph, build_generic_graph,
+    format_padartha_context, format_generic_context,
+    PADARTHA_EXTRACTION_SYSTEM, GENERIC_EXTRACTION_SYSTEM,
+)
