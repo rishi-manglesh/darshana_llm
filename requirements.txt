@@ -1,0 +1,16 @@
+# Core
+anthropic>=0.79.0
+duckduckgo-search>=8.1.1
+
+# Local model inference (Apple Silicon)
+mlx>=0.30.6
+mlx-lm>=0.30.7
+
+# Training (Exps 1 & 2)
+transformers>=5.1.0
+trl>=0.12.0
+datasets>=3.0.0
+torch>=2.4.0
+
+# General
+numpy>=2.0.0

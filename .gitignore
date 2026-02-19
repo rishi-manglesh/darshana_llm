@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Models (too large for git)
+models/
+*.bin
+*.safetensors
+*.gguf
+
+# Data artifacts (generated, not tracked)
+data/samkhya_corpus/*.txt
+data/samkhya_corpus/*_train.jsonl
+data/dpo_yoga_pairs/
+
+# Results (tracked selectively)
+results/*/results.jsonl
+results/*/judge.jsonl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# API keys
+.env
