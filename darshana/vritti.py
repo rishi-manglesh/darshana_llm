@@ -41,6 +41,19 @@ GENERIC_CONFIDENCE_PROMPT = """For each claim or statement in your response, tag
 Place the tag at the START of each paragraph or major claim. Be honest — tagging uncertain claims as CERTAIN is worse than tagging them as UNCERTAIN."""
 
 
+VRITTI_CONTEMPORARY_PROMPT = """For each claim or statement in your response, tag it with one of these knowledge types:
+
+[ESTABLISHED] — You are stating well-verified facts backed by strong evidence or direct logical proof. You are confident this is correct.
+[TEXTBOOK] — You are reproducing well-known information from established sources. Standard knowledge that any expert would agree on.
+[INFERRED] — You are reasoning from established premises to a new conclusion. The premises are solid but the conclusion is your logical derivation.
+[FRAMING] — You are providing context, explanation, or elaboration that helps understanding but is not itself a factual claim.
+[UNCERTAIN] — You are not confident in this claim. It might be wrong. Flag it honestly.
+
+Place the tag at the START of each paragraph or major claim. Be honest — tagging uncertain claims as ESTABLISHED is worse than tagging them as UNCERTAIN.
+
+IMPORTANT: These are DIFFERENT types of knowledge, not just confidence levels. An INFERRED claim may be high-confidence but is qualitatively different from an ESTABLISHED fact. A TEXTBOOK claim is not just "certain" — it signals you're recalling standard knowledge. Use the type that best describes HOW you know this, not just how sure you are."""
+
+
 GENERIC_COT_PROMPT = """Before each claim, briefly note your reasoning basis and confidence level.
 
 For each major statement:

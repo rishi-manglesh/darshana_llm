@@ -200,9 +200,16 @@ def count_udaharana(text):
 
 
 def count_vritti_tags(text):
-    """Count Vritti self-classification tags."""
+    """Count Vritti self-classification tags (both Sanskrit and contemporary)."""
     tags = {}
+    # Sanskrit labels
     for tag in ['PRAMANA', 'SMRITI', 'ANUMANA', 'VIKALPA', 'UNCERTAIN']:
+        tags[tag] = len(re.findall(rf'\[{tag}\]', text))
+    # Contemporary labels
+    for tag in ['ESTABLISHED', 'TEXTBOOK', 'INFERRED', 'FRAMING']:
+        tags[tag] = len(re.findall(rf'\[{tag}\]', text))
+    # Generic confidence labels
+    for tag in ['CERTAIN', 'LIKELY', 'SPECULATIVE', 'UNKNOWN']:
         tags[tag] = len(re.findall(rf'\[{tag}\]', text))
     tags['total'] = sum(tags.values())
     return tags
@@ -230,10 +237,12 @@ def count_hedging(text):
 
 
 def count_reasoning_steps(text):
-    """Count explicit reasoning structure."""
+    """Count explicit reasoning structure (Sanskrit and contemporary labels)."""
     numbered = len(re.findall(r'^\s*\d+[\.\)]\s', text, re.MULTILINE))
     labeled = len(re.findall(
-        r'^\s*(?:PRATIJNA|HETU|UDAHARANA|UPANAYA|NIGAMANA|Step|Claim|Reason|Example|Conclusion)[:\s]',
+        r'^\s*(?:PRATIJNA|HETU|UDAHARANA|UPANAYA|NIGAMANA|'
+        r'CLAIM|REASON|EVIDENCE|APPLICATION|CONCLUSION|'
+        r'Step|Claim|Reason|Example|Conclusion)[:\s]',
         text, re.MULTILINE
     ))
     return numbered + labeled

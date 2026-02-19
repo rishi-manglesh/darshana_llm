@@ -21,11 +21,17 @@ UDAHARANA (Prior Evidence):
   - Gap: Never tested vs generic equivalent
 
 UPANAYA (Experiment Design):
-  4 configs x 30 questions = 120 generations (API — Claude Sonnet)
+  5 configs x 30 questions = 150 generations (API — Claude Sonnet)
   - bare_baseline: No system prompt
-  - vritti_5mode: Vritti inline prompt (5 epistemic modes)
+  - vritti_5mode: Vritti inline prompt (Sanskrit: PRAMANA/SMRITI/ANUMANA/VIKALPA/UNCERTAIN)
+  - vritti_contemporary: Same 5-mode taxonomy with English labels (ESTABLISHED/TEXTBOOK/INFERRED/FRAMING/UNCERTAIN)
   - generic_confidence: "Tag confidence: CERTAIN/LIKELY/UNCERTAIN/SPECULATIVE/UNKNOWN"
   - generic_cot: "Note reasoning basis and confidence before each claim"
+
+  vritti_contemporary is the KEY config — it isolates whether the 5-mode TAXONOMY
+  adds value (vs generic_confidence's single confidence axis) independently of
+  whether Sanskrit labels help or hurt. If vritti_contemporary > generic_confidence,
+  the framework is proven even before pretraining teaches the model Sanskrit.
 
 NIGAMANA (Success Criteria):
   - PROVEN: vritti_5mode > generic_confidence by >10% win rate AND qualitative
@@ -43,7 +49,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from darshana.vritti import VRITTI_INLINE_PROMPT, GENERIC_CONFIDENCE_PROMPT, GENERIC_COT_PROMPT
+from darshana.vritti import (
+    VRITTI_INLINE_PROMPT, VRITTI_CONTEMPORARY_PROMPT,
+    GENERIC_CONFIDENCE_PROMPT, GENERIC_COT_PROMPT,
+)
 from experiments.utils import (
     TRANSFER_QUESTIONS, RESULTS_DIR, MODELS,
     get_client, call_api, run_experiment,
@@ -60,6 +69,7 @@ MODEL = "sonnet"
 SYSTEM_PROMPTS = {
     "bare_baseline": None,
     "vritti_5mode": VRITTI_INLINE_PROMPT,
+    "vritti_contemporary": VRITTI_CONTEMPORARY_PROMPT,
     "generic_confidence": GENERIC_CONFIDENCE_PROMPT,
     "generic_cot": GENERIC_COT_PROMPT,
 }

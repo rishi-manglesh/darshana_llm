@@ -15,7 +15,7 @@ Each module also includes a GENERIC equivalent for controlled comparison.
 
 # Copied from vedic_llm (proven in Phase 7)
 from .vritti import add_epistemic_tags, VRITTI_SYSTEM, VRITTI_INLINE_PROMPT
-from .vritti import GENERIC_CONFIDENCE_PROMPT, GENERIC_COT_PROMPT
+from .vritti import GENERIC_CONFIDENCE_PROMPT, GENERIC_COT_PROMPT, VRITTI_CONTEMPORARY_PROMPT
 from .nyaya import generate_with_tools, NYAYA_TOOLS, NYAYA_SYSTEM
 from .mimamsa import preprocess_query, MIMAMSA_SYSTEM
 from .mimamsa import GENERIC_REWRITE_SYSTEM, generic_rewrite

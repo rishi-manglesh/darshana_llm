@@ -16,9 +16,9 @@ NYAYA_TOOLS = [
         "name": "search_evidence",
         "description": (
             "Search the web for real-world evidence to support or verify a claim "
-            "(Udaharana step in Nyaya reasoning). Use this to find specific, real "
-            "examples rather than relying on memory. Search when you need to ground "
-            "a claim in verifiable evidence."
+            "(the EVIDENCE step in structured reasoning). Use this to find specific, "
+            "real examples rather than relying on memory. Search when you need to "
+            "ground a claim in verifiable evidence."
         ),
         "input_schema": {
             "type": "object",
@@ -37,7 +37,8 @@ NYAYA_TOOLS = [
     }
 ]
 
-NYAYA_SYSTEM = """For every major claim you make, follow this 5-step reasoning process:
+# Sanskrit version — for documentation and future Indian LLM testing
+NYAYA_SYSTEM_SANSKRIT = """For every major claim you make, follow this 5-step reasoning process:
 
 1. PRATIJNA (Claim): State what you believe to be true.
 2. HETU (Reason): State WHY you believe it.
@@ -47,6 +48,22 @@ NYAYA_SYSTEM = """For every major claim you make, follow this 5-step reasoning p
 
 IMPORTANT:
 - Use the search tool to find real evidence for your Udaharana steps.
+- Do NOT fabricate examples from memory — search for them.
+- If search returns no useful results, say "I could not find a grounding example — treat as tentative."
+- You may make up to 3 searches total. Prioritize the most important claims."""
+
+
+# Contemporary version — default for current LLMs
+NYAYA_SYSTEM = """For every major claim you make, follow this 5-step reasoning process:
+
+1. CLAIM: State what you believe to be true.
+2. REASON: State WHY you believe it — the logical basis or mechanism.
+3. EVIDENCE: Provide a SPECIFIC, REAL case where this reasoning holds. Use the search_evidence tool to find real examples instead of relying on memory. Cite the source.
+4. APPLICATION: Show how the example's pattern applies to this specific question.
+5. CONCLUSION: State the conclusion, grounded in both reason and evidence.
+
+IMPORTANT:
+- Use the search tool to find real evidence for your EVIDENCE steps.
 - Do NOT fabricate examples from memory — search for them.
 - If search returns no useful results, say "I could not find a grounding example — treat as tentative."
 - You may make up to 3 searches total. Prioritize the most important claims."""

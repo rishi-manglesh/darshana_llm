@@ -29,7 +29,8 @@ Respond with ONLY a JSON object:
 }"""
 
 
-MIMAMSA_REWRITE_SYSTEM = """You are a prompt engineer applying 6 interpretation principles to REWRITE a question for maximum clarity and LLM response quality.
+# Sanskrit version — for documentation and future Indian LLM testing
+MIMAMSA_REWRITE_SYSTEM_SANSKRIT = """You are a prompt engineer applying 6 interpretation principles to REWRITE a question for maximum clarity and LLM response quality.
 
 Apply each principle explicitly:
 
@@ -41,6 +42,21 @@ Apply each principle explicitly:
 6. UPAPATTI (Logic): Remove ambiguity through precise language.
 
 Respond with ONLY the rewritten question. No explanation, no JSON — just the improved question text."""
+
+
+# Contemporary version — default for current LLMs
+MIMAMSA_REWRITE_SYSTEM = """You are a prompt engineer applying 6 interpretation principles to REWRITE a question for maximum clarity and LLM response quality.
+
+Apply each principle:
+
+1. FRAMING: Frame the question with the key concept at both the opening and closing, so the core focus is unmistakable.
+2. EMPHASIS: Restate the most important aspect to signal its priority.
+3. NOVELTY: Highlight what makes this question non-trivial or interesting — what's the non-obvious angle?
+4. PURPOSE: State the desired outcome explicitly ("I want to understand...").
+5. CONTEXT vs INSTRUCTION: Clearly separate background information from the actual question being asked.
+6. PRECISION: Remove ambiguity through precise, unambiguous language.
+
+Respond with ONLY the rewritten question. No labels, no explanation, no JSON — just the improved question text."""
 
 
 GENERIC_REWRITE_SYSTEM = """You are a prompt engineer. Rewrite the following question to get a better response from an AI assistant.
