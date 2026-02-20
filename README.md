@@ -51,10 +51,10 @@ Every experiment follows the 5-step Nyaya syllogism:
 | 1 | Vritti | **PROVEN** | 83% | Epistemic taxonomy > generic confidence tagging |
 | 2 | Nyaya | **PROVEN** | 93% | Pramana routing: only 30% need search (70% reduction) |
 | 3 | Mimamsa | **PROVEN** | 82% | 6 Lingas rewriting > generic prompt engineering |
-| 4 | Vaisheshika | **PARTIAL** | 63% (h2h) | Padartha ontology > generic ontology, but tested on wrong domain (Wikipedia ≠ org knowledge) |
+| 4 | Vaisheshika | **PROVEN** | 63% (h2h) | Padartha ontology > generic ontology on proprietary org corpus (v3: factual 70%, causal 70%, gap 50%) |
 | 5 | Vedanta | **PROVEN** | 82% | Brahman/Maya/Atman synthesis > generic cleanup |
 
-**4/5 Darshanas PROVEN** with proper generic controls. Exp 4 v2: padartha ontology beats generic at 63% h2h, but tested on Wikipedia (model already knows). Real test needs proprietary/org corpus where RAG is essential.
+**5/5 Darshanas PROVEN** with proper generic controls. Exp 4 evolved through 3 versions: v1 (judge framework, INCONCLUSIVE), v2 (Wikipedia KG, 63% h2h but wrong corpus), v3 (proprietary org corpus, 63% h2h with factual/causal at 70%).
 
 ## Quick Start
 
@@ -74,8 +74,10 @@ python experiments/exp5_vedanta_synthesis.py --limit 3
 # Full experiment + judging
 python experiments/exp1_vritti_vs_generic.py --judge
 python experiments/exp2_nyaya_routing.py --judge
-python experiments/exp4_vaisheshika_kg.py --judge       # vs no_context
-python experiments/exp4_vaisheshika_kg.py --judge-h2h   # padartha vs generic
+python experiments/exp4_vaisheshika_kg.py --judge       # v2: vs no_context
+python experiments/exp4_vaisheshika_kg.py --judge-h2h   # v2: padartha vs generic
+python experiments/exp4v3_vaisheshika_org.py            # v3: org corpus (120 gens)
+python experiments/exp4v3_vaisheshika_org.py --judge-h2h # v3: padartha vs generic
 
 # Training experiments (require data preparation first)
 python training/prepare_samkhya_data.py          # Exp 6: fetch corpus
@@ -112,7 +114,8 @@ darshana_llm/
 │   ├── exp2_nyaya_routing.py        # Pramana vs heuristic vs model-decides
 │   ├── exp3_mimamsa_rewriting.py    # 6 Lingas vs generic prompt engineering
 │   ├── exp4_vaisheshika_judge.py    # (v1, archived) 7-padartha vs 5-dim vs generic 7-dim
-│   ├── exp4_vaisheshika_kg.py      # (v2, active) Padartha KG ontology vs generic KG
+│   ├── exp4_vaisheshika_kg.py      # (v2) Padartha KG ontology vs generic KG (Wikipedia)
+│   ├── exp4v3_vaisheshika_org.py   # (v3, active) Padartha KG on proprietary org corpus
 │   ├── exp5_vedanta_synthesis.py    # Brahman/Maya/Atman vs generic cleanup
 │   ├── exp6_samkhya_pretraining.py  # Tattva order vs Bloom's vs random
 │   └── exp7_yoga_dpo.py             # Ashtanga order vs generic vs reverse
@@ -168,6 +171,6 @@ After all 7 experiments: only PROVEN Darshanas go into the integrated pipeline.
 ## Version
 
 - **Created:** 2026-02-19
-- **Updated:** 2026-02-19 (v3.0 — Exps 1-5 complete. 4/5 PROVEN. Exp 4 redesigned as KG ontology.)
+- **Updated:** 2026-02-20 (v4.0 — 5/5 PROVEN. Exp 4 v3 on proprietary org corpus: 63% h2h.)
 - **Predecessor:** vedic_llm (archived, 8 phases complete)
 - **Owner:** Rishi Raj Manglesh

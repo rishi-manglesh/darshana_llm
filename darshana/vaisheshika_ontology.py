@@ -18,7 +18,51 @@ Generic control: standard entity/relation/attribute extraction.
 """
 
 import json
+import re
 from dataclasses import dataclass, field
+
+
+def _extract_json(raw_text):
+    """Robustly extract JSON from LLM output that may include prose wrapping.
+
+    Tries in order:
+    1. Direct JSON parse
+    2. Extract from ```json ... ``` or ``` ... ``` code blocks
+    3. Find first { ... } substring (greedy)
+    """
+    text = raw_text.strip()
+
+    # 1. Direct parse
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # 2. Code block extraction
+    code_block = re.search(r'```(?:json)?\s*\n?(.*?)```', text, re.DOTALL)
+    if code_block:
+        try:
+            return json.loads(code_block.group(1).strip())
+        except json.JSONDecodeError:
+            pass
+
+    # 3. Find outermost { ... }
+    start = text.find('{')
+    if start != -1:
+        # Find matching closing brace
+        depth = 0
+        for i in range(start, len(text)):
+            if text[i] == '{':
+                depth += 1
+            elif text[i] == '}':
+                depth -= 1
+                if depth == 0:
+                    try:
+                        return json.loads(text[start:i+1])
+                    except json.JSONDecodeError:
+                        break
+
+    return None
 
 # -- Dataclasses ---------------------------------------------------------------
 
@@ -76,6 +120,8 @@ For Abhava, identify 4 types:
 - ATYANTABHAVA (absolute absence): Things that are IMPOSSIBLE in this context
 - ANYONYABHAVA (mutual absence): Things that are mutually exclusive
 
+Extract the 5-8 MOST IMPORTANT entities. Be concise — use short phrases, not sentences.
+
 Respond with ONLY a JSON object:
 {
   "entities": [
@@ -104,6 +150,8 @@ Extract structured knowledge from the text:
 5. DIFFERENTIATORS: What makes each entity unique compared to similar things?
 6. RELATIONSHIPS: How entities connect — causes, enables, depends-on, part-of.
 7. GAPS: What is not covered, missing, limited, or constrained in the knowledge.
+
+Extract the 5-8 MOST IMPORTANT entities. Be concise — use short phrases, not sentences.
 
 Respond with ONLY a JSON object:
 {
@@ -136,22 +184,26 @@ def extract_padarthas(client, model, text):
         try:
             msg = client.messages.create(
                 model=model,
-                max_tokens=1500,
+                max_tokens=4096,
                 system=PADARTHA_EXTRACTION_SYSTEM,
-                messages=[{"role": "user", "content": f"Extract knowledge from:\n\n{text[:3000]}"}],
+                messages=[{"role": "user", "content": f"Extract knowledge from:\n\n{text[:4000]}"}],
             )
             raw = msg.content[0].text.strip()
-            if raw.startswith("```"):
-                raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-            return json.loads(raw)
-        except (json.JSONDecodeError, KeyError):
+            parsed = _extract_json(raw)
+            if parsed and "entities" in parsed:
+                return parsed
             if attempt < 2:
                 time.sleep(1)
                 continue
+            print(f"    [WARN] Padartha extraction failed. Stop reason: {msg.stop_reason}, Raw[:300]: {raw[:300]}")
             return None
         except Exception as e:
-            if "rate" in str(e).lower():
+            if "rate" in str(e).lower() or "overloaded" in str(e).lower():
                 time.sleep(2 ** (attempt + 1))
+                continue
+            print(f"    [WARN] Padartha extraction error: {e}")
+            if attempt < 2:
+                time.sleep(1)
                 continue
             return None
     return None
@@ -168,22 +220,26 @@ def extract_generic(client, model, text):
         try:
             msg = client.messages.create(
                 model=model,
-                max_tokens=1500,
+                max_tokens=4096,
                 system=GENERIC_EXTRACTION_SYSTEM,
-                messages=[{"role": "user", "content": f"Extract knowledge from:\n\n{text[:3000]}"}],
+                messages=[{"role": "user", "content": f"Extract knowledge from:\n\n{text[:4000]}"}],
             )
             raw = msg.content[0].text.strip()
-            if raw.startswith("```"):
-                raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-            return json.loads(raw)
-        except (json.JSONDecodeError, KeyError):
+            parsed = _extract_json(raw)
+            if parsed and "entities" in parsed:
+                return parsed
             if attempt < 2:
                 time.sleep(1)
                 continue
+            print(f"    [WARN] Generic extraction failed. Stop reason: {msg.stop_reason}, Raw[:300]: {raw[:300]}")
             return None
         except Exception as e:
-            if "rate" in str(e).lower():
+            if "rate" in str(e).lower() or "overloaded" in str(e).lower():
                 time.sleep(2 ** (attempt + 1))
+                continue
+            print(f"    [WARN] Generic extraction error: {e}")
+            if attempt < 2:
+                time.sleep(1)
                 continue
             return None
     return None
