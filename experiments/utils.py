@@ -54,6 +54,10 @@ def call_api(client, model, system, user_content, max_tokens=1024, max_retries=3
                 system=system,
                 messages=[{"role": "user", "content": user_content}],
             )
+            if not msg.content:
+                print(f"  [WARN] Empty response (stop={msg.stop_reason}), retrying...")
+                time.sleep(2)
+                continue
             return msg.content[0].text.strip()
         except anthropic.RateLimitError:
             wait = 2 ** (attempt + 1)

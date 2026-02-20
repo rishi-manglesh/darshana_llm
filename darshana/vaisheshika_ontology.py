@@ -114,11 +114,11 @@ Extract structured knowledge from the text using these 7 categories:
 6. SAMAVAYA (Inherence): Structural, non-incidental relationships — what is inherently connected?
 7. ABHAVA (Absence): What is MISSING, NOT discussed, limited, or constrained. Gaps in the knowledge.
 
-For Abhava, identify 4 types:
-- PRAGABHAVA (prior absence): Things that don't exist YET
-- PRADHVAMSABHAVA (posterior absence): Things that CEASED to exist
-- ATYANTABHAVA (absolute absence): Things that are IMPOSSIBLE in this context
-- ANYONYABHAVA (mutual absence): Things that are mutually exclusive
+For ABSENCE, identify 4 types:
+- PRIOR GAP: Things that don't exist YET (planned but not built)
+- CEASED: Things that CEASED to exist or were deprecated
+- IMPOSSIBLE: Things that are IMPOSSIBLE in this context (fundamental constraints)
+- MUTUAL EXCLUSION: Things that are mutually exclusive (choosing A means not-B)
 
 Extract the 5-8 MOST IMPORTANT entities. Be concise — use short phrases, not sentences.
 
@@ -360,7 +360,7 @@ def retrieve_padartha(graph, query, query_type="general"):
             continue
         entity_lines.append(f"- **{name}** ({node.dravya})")
     if entity_lines:
-        sections.append("## Entities (Dravya)\n" + "\n".join(entity_lines))
+        sections.append("## Entities\n" + "\n".join(entity_lines))
 
     if query_type == "discrimination":
         # Emphasize Vishesha (differentiators) and Samanya (taxonomy)
@@ -371,14 +371,14 @@ def retrieve_padartha(graph, query, query_type="general"):
             if node.vishesha:
                 vis_lines.append(f"- **{name}**: {'; '.join(node.vishesha)}")
         if vis_lines:
-            sections.append("## Key Differentiators (Vishesha)\n" + "\n".join(vis_lines))
+            sections.append("## Key Differentiators\n" + "\n".join(vis_lines))
 
         # Taxonomy for grouping
         if graph.samanya_index:
             tax_lines = []
             for cat, members in graph.samanya_index.items():
                 tax_lines.append(f"- **{cat}**: {', '.join(members)}")
-            sections.append("## Categories (Samanya)\n" + "\n".join(tax_lines))
+            sections.append("## Categories\n" + "\n".join(tax_lines))
 
     elif query_type == "force":
         # Emphasize Karma (actions) and Guna (mechanisms/properties)
@@ -389,7 +389,7 @@ def retrieve_padartha(graph, query, query_type="general"):
             if node.karma:
                 karma_lines.append(f"- **{name}**: {'; '.join(node.karma)}")
         if karma_lines:
-            sections.append("## Actions & Mechanisms (Karma)\n" + "\n".join(karma_lines))
+            sections.append("## Actions & Mechanisms\n" + "\n".join(karma_lines))
 
         guna_lines = []
         for name, node in graph.nodes.items():
@@ -398,7 +398,7 @@ def retrieve_padartha(graph, query, query_type="general"):
             if node.guna:
                 guna_lines.append(f"- **{name}**: {'; '.join(node.guna)}")
         if guna_lines:
-            sections.append("## Properties (Guna)\n" + "\n".join(guna_lines))
+            sections.append("## Properties\n" + "\n".join(guna_lines))
 
         # Inherent relationships
         rel_lines = []
@@ -408,7 +408,7 @@ def retrieve_padartha(graph, query, query_type="general"):
             if node.samavaya:
                 rel_lines.append(f"- **{name}**: {'; '.join(node.samavaya)}")
         if rel_lines:
-            sections.append("## Structural Relationships (Samavaya)\n" + "\n".join(rel_lines))
+            sections.append("## Structural Relationships\n" + "\n".join(rel_lines))
 
     elif query_type == "constraint":
         # Emphasize Abhava (absences/gaps/limits)
@@ -418,7 +418,7 @@ def retrieve_padartha(graph, query, query_type="general"):
                 entity = rec["entity"]
                 prefix = "" if entity == "_global" else f"[{entity}] "
                 ab_lines.append(f"- {prefix}{rec['absence']}")
-            sections.append("## Absences & Constraints (Abhava)\n" + "\n".join(ab_lines))
+            sections.append("## Absences & Constraints\n" + "\n".join(ab_lines))
 
         # Also include properties that define limits
         guna_lines = []
@@ -428,7 +428,7 @@ def retrieve_padartha(graph, query, query_type="general"):
             if node.guna:
                 guna_lines.append(f"- **{name}**: {'; '.join(node.guna)}")
         if guna_lines:
-            sections.append("## Properties (Guna)\n" + "\n".join(guna_lines))
+            sections.append("## Properties\n" + "\n".join(guna_lines))
 
     else:
         # General: balanced overview of all padarthas
@@ -450,7 +450,7 @@ def retrieve_padartha(graph, query, query_type="general"):
 
         if graph.abhava_index:
             ab_lines = [f"- {r['absence']}" for r in graph.abhava_index[:5]]
-            sections.append("## Notable Absences (Abhava)\n" + "\n".join(ab_lines))
+            sections.append("## Notable Absences\n" + "\n".join(ab_lines))
 
     return "\n\n".join(sections) if sections else "No relevant knowledge found."
 
@@ -575,9 +575,10 @@ def format_padartha_context(graph, query, query_type="general"):
     """
     retrieved = retrieve_padartha(graph, query, query_type)
     return (
-        "## Reference Knowledge (Padartha-organized)\n\n"
-        f"The following knowledge was extracted and organized using Vaisheshika ontology "
-        f"(7 Padarthas). Use it to inform your answer.\n\n"
+        "## Reference Knowledge (7-category organized)\n\n"
+        f"The following knowledge was extracted and organized using a 7-category ontology "
+        f"(entity, properties, actions, categories, differentiators, relationships, absences). "
+        f"Use it to inform your answer.\n\n"
         f"{retrieved}"
     )
 
