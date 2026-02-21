@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-"""Continued Pretraining with Samkhya-Organized Data
+"""Continued Pretraining with Samkhya/Bloom/Random-Organized Data
 
-Continues pretraining Qwen2.5-0.5B on:
+Continues pretraining a model on:
   1. Samkhya-ordered corpus (tattva categories in ontological order)
-  2. Random-ordered corpus (same data, shuffled)
+  2. Bloom-ordered corpus (Bloom's taxonomy order — Western control)
+  3. Random-ordered corpus (same data, shuffled — null hypothesis)
 
 Uses MLX for Apple Silicon training.
+
+Usage:
+  python training/pretrain_samkhya.py --mode all --model Qwen/Qwen2.5-1.5B-Instruct
+  python training/pretrain_samkhya.py --mode samkhya --model Qwen/Qwen2.5-3B-Instruct
 """
 
 import argparse
@@ -19,18 +24,35 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 # -- Config --------------------------------------------------------------------
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data" / "samkhya_corpus"
-MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-TRAINING_CONFIGS = {
-    "samkhya": {
-        "data": "samkhya_corpus.txt",
-        "output": "models/qwen25-samkhya-pretrained",
-    },
-    "random": {
-        "data": "random_corpus.txt",
-        "output": "models/qwen25-random-pretrained",
-    },
+DEFAULT_MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
+
+# Model size shorthand for output directories
+MODEL_SIZE_MAP = {
+    "Qwen/Qwen2.5-0.5B-Instruct": "0.5b",
+    "Qwen/Qwen2.5-1.5B-Instruct": "1.5b",
+    "Qwen/Qwen2.5-3B-Instruct": "3b",
 }
+
+
+def get_training_configs(model_name):
+    """Build training configs with model-size-aware output paths."""
+    size = MODEL_SIZE_MAP.get(model_name, model_name.split("/")[-1].lower())
+    return {
+        "samkhya": {
+            "data": "samkhya_corpus.txt",
+            "output": f"models/{size}-samkhya-pretrained",
+        },
+        "bloom": {
+            "data": "bloom_corpus.txt",
+            "output": f"models/{size}-bloom-pretrained",
+        },
+        "random": {
+            "data": "random_corpus.txt",
+            "output": f"models/{size}-random-pretrained",
+        },
+    }
 
 
 def prepare_training_data(corpus_path, output_path):
@@ -60,11 +82,12 @@ def prepare_training_data(corpus_path, output_path):
     return len(texts)
 
 
-def run_pretraining(config_name):
+def run_pretraining(config_name, model_name, iters=200, batch_size=2, lr="5e-5", lora_layers=16):
     """Run continued pretraining using MLX."""
-    config = TRAINING_CONFIGS[config_name]
+    configs = get_training_configs(model_name)
+    config = configs[config_name]
     corpus_path = DATA_DIR / config["data"]
-    output_dir = Path(__file__).resolve().parent.parent / config["output"]
+    output_dir = PROJECT_ROOT / config["output"]
 
     if not corpus_path.exists():
         print(f"ERROR: {corpus_path} not found. Run training/prepare_samkhya_data.py first.")
@@ -76,25 +99,25 @@ def run_pretraining(config_name):
 
     # MLX training command
     print(f"\nStarting continued pretraining: {config_name}")
-    print(f"  Model: {MODEL_NAME}")
+    print(f"  Model: {model_name}")
     print(f"  Data: {train_path} ({n_passages} passages)")
     print(f"  Output: {output_dir}")
 
     import subprocess
     cmd = [
         sys.executable, "-m", "mlx_lm.lora",
-        "--model", MODEL_NAME,
+        "--model", model_name,
         "--data", str(DATA_DIR),
         "--train",
         "--adapter-path", str(output_dir / "adapters"),
-        "--iters", "200",
-        "--batch-size", "2",
-        "--learning-rate", "5e-5",
-        "--lora-layers", "16",
+        "--iters", str(iters),
+        "--batch-size", str(batch_size),
+        "--learning-rate", lr,
+        "--lora-layers", str(lora_layers),
     ]
 
     print(f"\n  Command: {' '.join(cmd)}")
-    print(f"\n  (This will take ~1 hour on M4)")
+    print(f"\n  (This will take ~1 hour per config on M4)")
 
     result = subprocess.run(cmd, capture_output=False)
     if result.returncode != 0:
@@ -107,17 +130,29 @@ def run_pretraining(config_name):
 # -- Main ----------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Samkhya Continued Pretraining")
-    parser.add_argument("--mode", choices=["samkhya", "random", "both"], default="both",
-                        help="Which ordering to train (default: both)")
+    parser = argparse.ArgumentParser(description="Samkhya/Bloom/Random Continued Pretraining")
+    parser.add_argument("--mode", choices=["samkhya", "bloom", "random", "all"],
+                        default="all",
+                        help="Which ordering to train (default: all)")
+    parser.add_argument("--model", type=str, default=DEFAULT_MODEL,
+                        help=f"Base model (default: {DEFAULT_MODEL})")
+    parser.add_argument("--iters", type=int, default=200,
+                        help="Training iterations (default: 200)")
+    parser.add_argument("--batch-size", type=int, default=2,
+                        help="Batch size (default: 2)")
+    parser.add_argument("--lr", type=str, default="5e-5",
+                        help="Learning rate (default: 5e-5)")
+    parser.add_argument("--lora-layers", type=int, default=16,
+                        help="Number of LoRA layers (default: 16)")
     args = parser.parse_args()
 
-    modes = ["samkhya", "random"] if args.mode == "both" else [args.mode]
+    modes = ["samkhya", "bloom", "random"] if args.mode == "all" else [args.mode]
 
     for mode in modes:
-        run_pretraining(mode)
+        run_pretraining(mode, args.model, args.iters, args.batch_size, args.lr, args.lora_layers)
 
-    print("\nAll training complete. Update MODEL_PATHS in exp1_samkhya_pretraining.py.")
+    print(f"\nAll training complete.")
+    print(f"Next: python training/fuse_adapters.py --model {args.model}")
 
 
 if __name__ == "__main__":

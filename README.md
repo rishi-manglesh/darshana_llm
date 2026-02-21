@@ -56,6 +56,53 @@ Every experiment follows the 5-step Nyaya syllogism:
 
 **5/5 Darshanas PROVEN** with proper generic controls. Exp 4 evolved through 4 versions: v1 (judge framework, INCONCLUSIVE), v2 (Wikipedia KG, 63% h2h but wrong corpus), v3 (synthetic org corpus, 63% h2h), v4 (real vault corpus + English labels, 71% h2h with factual 82%, causal 70%, gap 61%).
 
+## Cross-Model Validation
+
+Do the techniques generalize beyond Claude? Tested on open-source Qwen3 models running locally via MLX on Apple Silicon (48GB M4 Mac). Sonnet judges all comparisons for consistency.
+
+### Within-Model: Does darshana beat generic on open-source?
+
+| Experiment | qwen3_8b (8B) | qwen3_32b (32B) | Sonnet (original) | Generalizes? |
+|------------|---------------|-----------------|-------------------|--------------|
+| **Vritti** (epistemic calibration) | **63%** | **67%** | 60% | **YES** |
+| **Mimamsa** (query rewriting) | 30% | — | 73% | **NO** |
+| **Vedanta** (response synthesis) | **60%** | **73%** | 63% | **YES** |
+
+2/3 techniques validated across model families. Vritti and Vedanta work better on qwen3_32b than on Sonnet.
+
+### Cross-Model: Can darshana + open-source beat frontier + generic?
+
+| Matchup | Open-Source Wins | Sonnet Wins | Verdict |
+|---------|-----------------|-------------|---------|
+| qwen3_8b + vritti vs Sonnet + generic | 0% (0/30) | 100% | Sonnet dominates |
+| qwen3_8b + vedanta vs Sonnet + generic | 10% (3/30) | 80% | Sonnet dominates |
+| qwen3_32b + vritti vs Sonnet + generic | 7% (2/30) | 90% | Sonnet dominates |
+| qwen3_32b + vedanta vs Sonnet + generic | 20% (6/30) | 80% | Sonnet dominates |
+| qwen3_32b + vritti vs Sonnet + vritti | 0% (0/30) | 100% | Sonnet dominates |
+| qwen3_32b + vedanta vs Sonnet + vedanta | 7% (2/30) | 90% | Sonnet dominates |
+
+**The framework does NOT lift open-source to frontier level.** Sonnet wins 80-100% of direct matchups.
+
+### What This Actually Proves
+
+1. **Darshana techniques are model-agnostic reasoning patterns** — they improve any model vs generic prompting on that same model (63-73% within-model win rate)
+2. **The model capability gap dwarfs prompt-layer lift** — no prompt framework bridges an 8B/32B → Sonnet gap. Sonnet's base quality is categorically ahead.
+3. **The framework is a prompt-layer optimization, not a model-layer replacement** — it makes any model better, but a Qwen3-32B with great prompts doesn't beat Sonnet with basic prompts.
+4. **Value proposition is clear:** If you're already using a frontier model, darshana prompting gives 60-73% win rate over generic prompting. The lift is real but operates within a model's capability ceiling.
+
+### Limitations
+
+- All 30 test questions are academic/analytical (economics, biology, physics)
+- No enterprise, everyday, creative, or domain-specific use cases tested
+- Only tested on Qwen3 family — other architectures (Mistral, Llama) untested
+- Results may not generalize to all query types or user personas
+
+### Models Tested
+
+- `qwen3_8b`: mlx-community/Qwen3-8B-4bit (~6GB RAM)
+- `qwen3_32b`: mlx-community/Qwen3-32B-4bit (~20GB RAM)
+- Judge: Claude Sonnet (claude-sonnet-4-5-20250929)
+
 ## Quick Start
 
 ```bash
@@ -88,6 +135,13 @@ python experiments/exp6_samkhya_pretraining.py --judge
 python training/generate_dpo_pairs.py             # Exp 7: generate pairs
 python training/train_dpo.py                      # Exp 7: train DPO
 python experiments/exp7_yoga_dpo.py --judge
+
+# Cross-model validation (local MLX models — no API key for generation)
+pip install mlx-lm                                        # one-time
+python experiments/cross_model_validation.py --exp 1 --model qwen3_8b --limit 3  # smoke test
+python experiments/cross_model_validation.py --exp 1 --model qwen3_32b           # full run
+python experiments/cross_model_validation.py --judge --model qwen3_32b --exp 1   # Sonnet judges
+python experiments/cross_model_validation.py --analyze                            # summary
 ```
 
 ## Project Structure
@@ -173,6 +227,6 @@ After all 7 experiments: only PROVEN Darshanas go into the integrated pipeline.
 ## Version
 
 - **Created:** 2026-02-19
-- **Updated:** 2026-02-20 (v5.0 — 5/5 PROVEN. Exp 4 v4 on real vault corpus: 71% h2h.)
+- **Updated:** 2026-02-21 (v6.1 — Cross-model validation complete. 2/3 techniques generalize to open-source (within-model). Framework does NOT bridge frontier gap — Sonnet wins 80-100% of direct matchups.)
 - **Predecessor:** vedic_llm (archived, 8 phases complete)
 - **Owner:** Rishi Raj Manglesh

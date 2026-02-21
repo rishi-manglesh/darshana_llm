@@ -1,0 +1,55 @@
+[
+  {"query": "When should an enterprise build custom software versus buying an existing solution? What factors determine the right approach?", "target_op": "discrimination", "domain": "enterprise", "difficulty": "standard"},
+  {"query": "What forces drive a startup to pivot its business model? What mechanisms trigger the shift?", "target_op": "force", "domain": "enterprise", "difficulty": "standard"},
+  {"query": "What constrains a company's ability to scale from 50 to 500 employees? What are the binding bottlenecks?", "target_op": "constraint", "domain": "enterprise", "difficulty": "standard"},
+  {"query": "Compare growth-at-all-costs strategy versus profitability-first. How do they differ in outcomes?", "target_op": "discrimination", "domain": "enterprise", "difficulty": "standard"},
+  {"query": "What limits an enterprise's ability to adopt AI at scale? What organizational constraints exist?", "target_op": "constraint", "domain": "enterprise", "difficulty": "standard"},
+
+  {"query": "Compare monolithic architecture versus microservices. What are the real trade-offs?", "target_op": "discrimination", "domain": "technical", "difficulty": "standard"},
+  {"query": "What causes race conditions in concurrent systems? What are the driving mechanisms?", "target_op": "force", "domain": "technical", "difficulty": "standard"},
+  {"query": "What constrains the adoption of strongly-typed languages in large organizations?", "target_op": "constraint", "domain": "technical", "difficulty": "standard"},
+  {"query": "What forces drive the accumulation of technical debt? What mechanisms make it grow?", "target_op": "force", "domain": "technical", "difficulty": "standard"},
+  {"query": "Distinguish between horizontal and vertical scaling. When does each approach break down?", "target_op": "discrimination", "domain": "technical", "difficulty": "standard"},
+
+  {"query": "Compare persuasive writing with expository writing. How do their goals and techniques differ?", "target_op": "discrimination", "domain": "creative", "difficulty": "standard"},
+  {"query": "What drives creative breakthroughs? What forces enable novel ideas to emerge?", "target_op": "force", "domain": "creative", "difficulty": "standard"},
+  {"query": "What constrains artistic originality? What limits prevent truly novel creative work?", "target_op": "constraint", "domain": "creative", "difficulty": "standard"},
+  {"query": "Distinguish between imitation and inspiration in creative work. Where is the boundary?", "target_op": "discrimination", "domain": "creative", "difficulty": "standard"},
+  {"query": "What forces drive the adoption of new artistic movements? What causes one style to replace another?", "target_op": "force", "domain": "creative", "difficulty": "standard"},
+
+  {"query": "Compare preventive healthcare with reactive healthcare. What are the fundamental trade-offs?", "target_op": "discrimination", "domain": "everyday_practical", "difficulty": "standard"},
+  {"query": "What drives habit formation? What forces make a new behavior stick or fail?", "target_op": "force", "domain": "everyday_practical", "difficulty": "standard"},
+  {"query": "What constrains a person's ability to change their diet permanently? What are the binding limits?", "target_op": "constraint", "domain": "everyday_practical", "difficulty": "standard"},
+  {"query": "Compare renting versus owning tools and equipment for home projects. When does each make sense?", "target_op": "discrimination", "domain": "everyday_practical", "difficulty": "standard"},
+  {"query": "What limits the effectiveness of personal budgeting? What constraints undermine financial planning?", "target_op": "constraint", "domain": "everyday_practical", "difficulty": "standard"},
+
+  {"query": "Distinguish between civil law and common law systems. How do they differ in philosophy and practice?", "target_op": "discrimination", "domain": "domain_specific", "difficulty": "standard"},
+  {"query": "What drives antibiotic resistance? What biological mechanisms cause bacteria to evolve defenses?", "target_op": "force", "domain": "domain_specific", "difficulty": "standard"},
+  {"query": "What constrains bridge design? What physical and engineering limits determine span length?", "target_op": "constraint", "domain": "domain_specific", "difficulty": "standard"},
+  {"query": "Compare classical conditioning with operant conditioning. How do the learning mechanisms differ?", "target_op": "discrimination", "domain": "domain_specific", "difficulty": "standard"},
+  {"query": "What forces drive soil erosion? What mechanisms accelerate land degradation?", "target_op": "force", "domain": "domain_specific", "difficulty": "standard"},
+
+  {"query": "Compare utilitarian and deontological ethics. How do they resolve moral dilemmas differently?", "target_op": "discrimination", "domain": "ethics", "difficulty": "standard"},
+  {"query": "What drives moral progress in societies? What forces cause ethical standards to evolve?", "target_op": "force", "domain": "ethics", "difficulty": "standard"},
+  {"query": "What constrains ethical decision-making in organizations? What limits prevent people from doing the right thing?", "target_op": "constraint", "domain": "ethics", "difficulty": "standard"},
+  {"query": "Distinguish between moral relativism and moral universalism. What are the practical implications?", "target_op": "discrimination", "domain": "ethics", "difficulty": "standard"},
+  {"query": "What forces drive whistleblowing? What mechanisms push individuals to report misconduct?", "target_op": "force", "domain": "ethics", "difficulty": "standard"},
+
+  {"query": "Compare correlation and causation. What distinguishes genuine causal relationships from spurious ones?", "target_op": "discrimination", "domain": "data_analytics", "difficulty": "standard"},
+  {"query": "What drives survivorship bias? What mechanisms cause it to distort conclusions?", "target_op": "force", "domain": "data_analytics", "difficulty": "standard"},
+  {"query": "What constrains the reliability of small sample studies? What limits undermine statistical conclusions?", "target_op": "constraint", "domain": "data_analytics", "difficulty": "standard"},
+  {"query": "Distinguish between Type I and Type II errors. When does each matter more?", "target_op": "discrimination", "domain": "data_analytics", "difficulty": "standard"},
+  {"query": "What forces drive confirmation bias in data analysis? What mechanisms reinforce pre-existing beliefs?", "target_op": "force", "domain": "data_analytics", "difficulty": "standard"},
+
+  {"query": "Compare persuasion and manipulation. Where is the ethical boundary in communication?", "target_op": "discrimination", "domain": "communication", "difficulty": "standard"},
+  {"query": "What drives cross-cultural miscommunication? What forces cause messages to be misinterpreted?", "target_op": "force", "domain": "communication", "difficulty": "standard"},
+  {"query": "What constrains effective communication in large organizations? What bottlenecks limit information flow?", "target_op": "constraint", "domain": "communication", "difficulty": "standard"},
+  {"query": "Distinguish between active listening and passive hearing. How do they produce different outcomes?", "target_op": "discrimination", "domain": "communication", "difficulty": "standard"},
+  {"query": "What forces drive the spread of rumors in social networks? What mechanisms amplify unverified information?", "target_op": "force", "domain": "communication", "difficulty": "standard"},
+
+  {"query": "Compare deliberate practice with naive repetition. What distinguishes effective skill-building?", "target_op": "discrimination", "domain": "meta_cognitive", "difficulty": "standard"},
+  {"query": "What drives the Dunning-Kruger effect? What cognitive mechanisms cause miscalibrated self-assessment?", "target_op": "force", "domain": "meta_cognitive", "difficulty": "standard"},
+  {"query": "What constrains human decision-making under uncertainty? What cognitive limits affect judgment?", "target_op": "constraint", "domain": "meta_cognitive", "difficulty": "standard"},
+  {"query": "Distinguish between System 1 and System 2 thinking. When does each lead to better outcomes?", "target_op": "discrimination", "domain": "meta_cognitive", "difficulty": "standard"},
+  {"query": "What forces drive cognitive dissonance resolution? What mechanisms cause people to change beliefs versus behavior?", "target_op": "force", "domain": "meta_cognitive", "difficulty": "standard"}
+]

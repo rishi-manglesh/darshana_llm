@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Prepare Samkhya-Organized Training Data
 
-Curates a small corpus (~5MB) relevant to the 30 transfer questions,
-then organizes it two ways:
+Curates a corpus relevant to the 75 transfer questions (30 original + 45 extended),
+then organizes it three ways:
   1. Samkhya: By tattva categories (purusha, prakriti, gunas, tanmatras)
-  2. Random: Same data, shuffled
+  2. Bloom: By Bloom's taxonomy order (Western control)
+  3. Random: Same data, shuffled
 
 Uses Wikipedia API to gather relevant texts.
 """
@@ -17,7 +18,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from darshana.samkhya import categorize_text, organize_corpus, samkhya_training_order
+from darshana.samkhya import (
+    categorize_text, organize_corpus, samkhya_training_order,
+    bloom_ordered_corpus, bloom_training_order,
+)
 from darshana.search import search_wikipedia
 
 # -- Config --------------------------------------------------------------------
@@ -25,14 +29,14 @@ from darshana.search import search_wikipedia
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 SAMKHYA_DIR = DATA_DIR / "samkhya_corpus"
 
-# Topics to search Wikipedia for (covers our 30 questions' domains)
+# Topics to search Wikipedia for (covers our 75 questions' domains)
 SEARCH_TOPICS = [
-    # Economics
+    # Economics (original)
     "fiscal policy", "monetary policy", "recession economics", "economic depression",
     "supply-side economics", "demand-side economics", "inflation causes", "stock market crash",
     "economic growth developing countries", "central bank interest rate", "international trade barriers",
     "economic growth constraints",
-    # Biology
+    # Biology (original)
     "mitosis cell division", "meiosis cell division", "prokaryotic cell", "eukaryotic cell",
     "innate immunity", "adaptive immunity", "cell division regulation", "allergic reaction mechanism",
     "evolution natural selection", "cell size limits", "population ecology carrying capacity",
@@ -40,11 +44,31 @@ SEARCH_TOPICS = [
     # Methodology (purusha category)
     "scientific method", "critical thinking", "logical reasoning", "epistemology",
     "causal inference", "statistical reasoning",
-    # Everyday
+    # Everyday (original)
     "rent vs buy house", "leadership management", "online learning education",
     "stock market bonds", "career change psychology", "traffic congestion causes",
     "misinformation social media", "workplace burnout", "skill learning psychology",
     "renewable energy adoption barriers", "housing affordability", "remote work productivity",
+    # --- Extended domain topics (covering 45 new questions) ---
+    # Enterprise
+    "business strategy", "startup pivot", "organizational scaling",
+    "build vs buy software",
+    # Technical
+    "microservices architecture", "race condition computing",
+    "technical debt software",
+    # Creative
+    "creative writing techniques", "artistic movements history",
+    # Ethics
+    "ethical philosophy", "utilitarianism deontology", "whistleblowing",
+    # Data & analytics
+    "correlation causation statistics", "survivorship bias",
+    "statistical significance",
+    # Communication
+    "persuasion psychology", "cross-cultural communication",
+    # Meta-cognitive
+    "deliberate practice", "Dunning-Kruger effect", "cognitive bias",
+    # Domain-specific
+    "civil law common law", "antibiotic resistance", "bridge engineering",
 ]
 
 
@@ -70,13 +94,13 @@ def fetch_corpus():
 
 
 def save_organized(documents):
-    """Organize documents by Samkhya categories and save."""
+    """Organize documents by Samkhya categories and save three orderings."""
     SAMKHYA_DIR.mkdir(parents=True, exist_ok=True)
 
     # Organize by Samkhya categories
     organized = organize_corpus(documents)
 
-    # Save Samkhya-ordered version
+    # --- 1. Samkhya-ordered ---
     samkhya_order = samkhya_training_order()
     samkhya_docs = []
     for cat in samkhya_order:
@@ -84,7 +108,6 @@ def save_organized(documents):
             doc_with_cat = dict(doc)
             doc_with_cat["samkhya_category"] = cat
             samkhya_docs.append(doc_with_cat)
-    # Add unclassified at the end
     for doc in organized.get("unclassified", []):
         doc_with_cat = dict(doc)
         doc_with_cat["samkhya_category"] = "unclassified"
@@ -95,7 +118,30 @@ def save_organized(documents):
         for doc in samkhya_docs:
             f.write(json.dumps(doc, ensure_ascii=False) + "\n")
 
-    # Save random-ordered version (same documents, shuffled)
+    # --- 2. Bloom-ordered (Western control) ---
+    bloom_docs_raw = bloom_ordered_corpus(organized)
+    bloom_docs = []
+    bloom_order = bloom_training_order()
+    # Assign bloom category labels
+    cat_for_doc = {}
+    for cat in bloom_order:
+        for doc in organized.get(cat, []):
+            doc_id = id(doc)
+            cat_for_doc[doc_id] = cat
+    for doc in organized.get("unclassified", []):
+        cat_for_doc[id(doc)] = "unclassified"
+
+    for doc in bloom_docs_raw:
+        doc_with_cat = dict(doc)
+        doc_with_cat["samkhya_category"] = cat_for_doc.get(id(doc), "unclassified")
+        bloom_docs.append(doc_with_cat)
+
+    bloom_path = SAMKHYA_DIR / "bloom_ordered.jsonl"
+    with open(bloom_path, "w") as f:
+        for doc in bloom_docs:
+            f.write(json.dumps(doc, ensure_ascii=False) + "\n")
+
+    # --- 3. Random-ordered (null hypothesis) ---
     random_docs = list(samkhya_docs)
     random.shuffle(random_docs)
     random_path = SAMKHYA_DIR / "random_ordered.jsonl"
@@ -110,12 +156,13 @@ def save_organized(documents):
         if count:
             print(f"  {cat:<25}: {count} documents")
 
-    print(f"\nSaved:")
+    print(f"\nSaved JSONL:")
     print(f"  Samkhya-ordered: {samkhya_path}")
+    print(f"  Bloom-ordered:   {bloom_path}")
     print(f"  Random-ordered:  {random_path}")
 
-    # Also save raw text files for pretraining
-    for name, docs in [("samkhya", samkhya_docs), ("random", random_docs)]:
+    # Save raw text files for pretraining
+    for name, docs in [("samkhya", samkhya_docs), ("bloom", bloom_docs), ("random", random_docs)]:
         txt_path = SAMKHYA_DIR / f"{name}_corpus.txt"
         with open(txt_path, "w") as f:
             for doc in docs:

@@ -1,44 +1,21 @@
 #!/usr/bin/env python3
-"""Exp 7: Yoga — DPO Curriculum Ordering
+"""Exp 7: Yoga DPO + Combined Darshana Stack Evaluation
 
-LAYER: Post-training (DPO alignment)
+LAYER: Post-training (DPO alignment) + Combined (pretrain x DPO)
 RESEARCH FRAMEWORK: Nyaya Pancha-avayava (5-Step Syllogism)
-STATUS: NEVER TESTED — second most speculative experiment
 
-PRATIJNA (Thesis):
-  Training DPO preference pairs in Yoga's Ashtanga order (ethics -> stability ->
-  focus -> depth -> integration) produces better-aligned models than the same
-  pairs in random order.
-
-HETU (Reason):
-  Yoga's 8 limbs encode a developmental sequence: learn honesty (Yama) before
-  structure (Asana) before focus (Pratyahara) before depth (Dharana) before
-  synthesis (Samadhi). Likewise, an LLM should learn "don't hallucinate" before
-  "reason deeply" before "synthesize coherently."
-
-UDAHARANA (Prior Evidence):
-  - No prior evidence from vedic_llm (never built)
-  - DPO literature: data ordering can matter on small models
-  - yoga_dpo.py exists with 5-stage mapping
-
-UPANAYA (Experiment Design):
-  5 configs:
-  - base: Qwen2.5-0.5B-Instruct, no DPO
-  - yoga_ordered: 150 pairs in Ashtanga stage order
-  - random_ordered: Same 150 pairs, shuffled
-  - reverse_ordered: Same 150 pairs, REVERSE Ashtanga order (synthesis -> ethics)
-  - generic_curriculum: 150 pairs ordered by complexity (simple -> complex) without Yoga
-
-  reverse_ordered directly tests whether the ORDER matters.
-  generic_curriculum tests whether Yoga's specific ordering adds value beyond
-  "easy first."
+Tests 11 configs covering:
+  Exp 6 (pretraining only): samkhya, bloom, random pretrained
+  Exp 7 (DPO only): yoga, reverse, complexity, random DPO
+  Combined: samkhya+yoga, bloom+complexity, random+random
 
 NIGAMANA (Success Criteria):
-  - PROVEN: yoga_ordered > random_ordered AND yoga_ordered > generic_curriculum
-  - PARTIALLY PROVEN: yoga ≈ generic > random (ordering helps, Yoga isn't special)
-  - DISPROVEN: random ≈ yoga (DPO pair order doesn't matter on small models)
+  - PROVEN: yoga > complexity > random (DPO) AND samkhya_yoga >> bloom_complexity
+  - PARTIALLY PROVEN: ordering helps but darshana not special
+  - DISPROVEN: all ~ base
 
-Compute: ~8 hrs M4 (4 DPO runs) | Cost: ~$1.05
+Usage:
+  python experiments/exp7_yoga_dpo.py --model-size 1.5b --questions all --judge --judge-model sonnet
 """
 
 import argparse
@@ -50,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from experiments.utils import (
     TRANSFER_QUESTIONS, RESULTS_DIR, run_experiment,
+    get_extended_questions, get_all_questions,
 )
 from experiments.judge import run_pairwise_judging
 
@@ -57,37 +35,92 @@ from experiments.judge import run_pairwise_judging
 # -- Config --------------------------------------------------------------------
 
 EXPERIMENT_NAME = "exp7_yoga"
-MODEL_BASE = "Qwen/Qwen2.5-0.5B-Instruct"
 MAX_TOKENS = 512
 
-CONFIGS = ["base", "yoga_ordered", "random_ordered", "reverse_ordered", "generic_curriculum"]
-
-MODEL_PATHS = {
-    "base": MODEL_BASE,
-    "yoga_ordered": None,         # Set after training/train_dpo.py --mode yoga
-    "random_ordered": None,       # Set after training/train_dpo.py --mode random
-    "reverse_ordered": None,      # Set after training/train_dpo.py --mode reverse
-    "generic_curriculum": None,   # Set after training/train_dpo.py --mode generic
+MODEL_BASES = {
+    "0.5b": "Qwen/Qwen2.5-0.5B-Instruct",
+    "1.5b": "Qwen/Qwen2.5-1.5B-Instruct",
+    "3b": "Qwen/Qwen2.5-3B-Instruct",
 }
+
+# All 11 configs for the 2-factor experiment
+CONFIGS = [
+    # Control
+    "base",
+    # Exp 6: Pretraining only (no DPO)
+    "samkhya_only",
+    "bloom_only",
+    "random_pt_only",
+    # Exp 7: DPO only (no pretraining)
+    "yoga_only",
+    "reverse_only",
+    "complexity_only",
+    "random_dpo_only",
+    # Combined: pretrain + DPO
+    "samkhya_yoga",
+    "bloom_complexity",
+    "random_random",
+]
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+MODELS_DIR = PROJECT_ROOT / "models"
+
+
+def get_model_paths(model_size):
+    """Build model paths for all 11 configs."""
+    base = MODEL_BASES.get(model_size, f"Qwen/Qwen2.5-{model_size.upper()}-Instruct")
+    s = model_size  # shorthand
+
+    def model_path(subdir):
+        p = MODELS_DIR / subdir
+        # Check for DPO final model, then fused model, then adapter dir
+        if (p / "final").exists():
+            return str(p / "final")
+        if p.exists():
+            return str(p)
+        return None
+
+    return {
+        "base": base,
+        # Pretraining only (fused models)
+        "samkhya_only": model_path(f"{s}-samkhya-fused"),
+        "bloom_only": model_path(f"{s}-bloom-fused"),
+        "random_pt_only": model_path(f"{s}-random-fused"),
+        # DPO only (base + DPO)
+        "yoga_only": model_path(f"{s}-yoga-dpo"),
+        "reverse_only": model_path(f"{s}-reverse-dpo"),
+        "complexity_only": model_path(f"{s}-complexity-dpo"),
+        "random_dpo_only": model_path(f"{s}-random-dpo"),
+        # Combined: pretrained + DPO
+        "samkhya_yoga": model_path(f"{s}-samkhya-yoga-dpo"),
+        "bloom_complexity": model_path(f"{s}-bloom-complexity-dpo"),
+        "random_random": model_path(f"{s}-random-random-dpo"),
+    }
 
 
 # -- Generation ----------------------------------------------------------------
 
-def generate_local(config, question):
+_model_cache = {}
+
+
+def generate_local(config, question, model_paths):
     """Generate a response using a local model via MLX."""
     from mlx_lm import load, generate
     from mlx_lm.sample_utils import make_sampler
 
-    model_path = MODEL_PATHS[config]
+    model_path = model_paths[config]
     if model_path is None:
         return {
-            "response": f"[SKIP: {config} model not yet trained. Run training/train_dpo.py first.]",
+            "response": f"[SKIP: {config} model not yet trained.]",
             "word_count": 0,
         }
 
-    model, tokenizer = load(model_path)
-    sampler = make_sampler(temp=0.7, top_p=0.9)
+    # Cache loaded models
+    if model_path not in _model_cache:
+        _model_cache[model_path] = load(model_path)
+    model, tokenizer = _model_cache[model_path]
 
+    sampler = make_sampler(temp=0.7, top_p=0.9)
     messages = [{"role": "user", "content": question["query"]}]
     text = tokenizer.apply_chat_template(
         messages, tokenize=False, add_generation_prompt=True
@@ -108,37 +141,58 @@ def generate_local(config, question):
 # -- Main ----------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Exp 7: Yoga DPO Curriculum Ordering")
+    parser = argparse.ArgumentParser(description="Exp 7: Yoga DPO + Combined Stack")
     parser.add_argument("--limit", type=int, default=None, help="Limit questions")
     parser.add_argument("--judge", action="store_true", help="Run judging")
     parser.add_argument("--judge-model", choices=["haiku", "sonnet"], default="haiku")
+    parser.add_argument("--model-size", choices=["0.5b", "1.5b", "3b"], default="1.5b",
+                        help="Model size (default: 1.5b)")
+    parser.add_argument("--questions", choices=["original", "extended", "all"],
+                        default="original",
+                        help="Question set: original (30), extended (45), all (75)")
+    parser.add_argument("--configs", type=str, nargs="+", default=None,
+                        help="Specific configs to run (default: all available)")
     args = parser.parse_args()
 
+    model_paths = get_model_paths(args.model_size)
+    exp_name = f"{EXPERIMENT_NAME}_{args.model_size}" if args.model_size != "1.5b" else EXPERIMENT_NAME
+
+    # Select question set
+    if args.questions == "original":
+        questions = TRANSFER_QUESTIONS
+    elif args.questions == "extended":
+        questions = get_extended_questions()
+    elif args.questions == "all":
+        questions = get_all_questions()
+
+    # Determine which configs to run
+    requested_configs = args.configs or CONFIGS
     available_configs = []
-    for config in CONFIGS:
-        if config == "base" or MODEL_PATHS.get(config) is not None:
+    for config in requested_configs:
+        if config == "base" or model_paths.get(config) is not None:
             available_configs.append(config)
 
-    if len(available_configs) < len(CONFIGS):
-        missing = set(CONFIGS) - set(available_configs)
+    if len(available_configs) < len(requested_configs):
+        missing = set(requested_configs) - set(available_configs)
         print(f"WARNING: Models not yet trained: {missing}")
-        print("Run training/generate_dpo_pairs.py then training/train_dpo.py first.")
+        print("Run training/run_full_pipeline.py first.")
         print(f"Running with available configs: {available_configs}")
 
     def generate_fn(config, question):
-        return generate_local(config, question)
+        return generate_local(config, question, model_paths)
 
     results = run_experiment(
-        name=EXPERIMENT_NAME,
+        name=exp_name,
         configs=available_configs,
         generate_fn=generate_fn,
         limit=args.limit,
+        questions=questions,
     )
 
     if args.judge and len(available_configs) > 1:
         experimental = [c for c in available_configs if c != "base"]
         run_pairwise_judging(
-            EXPERIMENT_NAME, "base", experimental,
+            exp_name, "base", experimental,
             judge_model=args.judge_model,
         )
 

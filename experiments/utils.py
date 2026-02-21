@@ -1,6 +1,7 @@
 """Experiment Utilities — Questions, Metrics, API Helpers
 
 Canonical 30 transfer questions (from vedic_llm Phase 5-7).
+Extended 45 questions across 9 diverse domains.
 Metrics functions extracted from eval_dharmic_principles.py.
 API helper functions for consistent experiment infrastructure.
 """
@@ -178,6 +179,23 @@ TRANSFER_QUESTIONS = [
 ]
 
 
+# -- Extended Questions --------------------------------------------------------
+
+def get_extended_questions():
+    """Load 45 extended questions from data/questions_extended.json."""
+    path = DATA_DIR / "questions_extended.json"
+    if not path.exists():
+        print(f"  [WARN] Extended questions not found: {path}")
+        return []
+    with open(path) as f:
+        return json.load(f)
+
+
+def get_all_questions():
+    """Return all 75 questions (30 original + 45 extended)."""
+    return TRANSFER_QUESTIONS + get_extended_questions()
+
+
 # -- Metrics Functions ---------------------------------------------------------
 
 def count_udaharana(text):
@@ -293,7 +311,7 @@ def mean(values):
 
 # -- Experiment Runner Base ----------------------------------------------------
 
-def run_experiment(name, configs, generate_fn, limit=None):
+def run_experiment(name, configs, generate_fn, limit=None, questions=None):
     """Generic experiment runner with resume support.
 
     Args:
@@ -301,6 +319,7 @@ def run_experiment(name, configs, generate_fn, limit=None):
         configs: list of config name strings
         generate_fn: function(config, question) -> dict with at least 'response' key
         limit: optional limit on number of questions (for smoke testing)
+        questions: optional list of question dicts (default: TRANSFER_QUESTIONS)
 
     Returns:
         list of result records
@@ -310,7 +329,9 @@ def run_experiment(name, configs, generate_fn, limit=None):
     results_path = results_dir / "results.jsonl"
 
     existing = load_existing_keys(results_path)
-    questions = TRANSFER_QUESTIONS[:limit] if limit else TRANSFER_QUESTIONS
+    questions = questions or TRANSFER_QUESTIONS
+    if limit:
+        questions = questions[:limit]
     total = len(questions) * len(configs)
 
     print(f"\n{'='*60}")
