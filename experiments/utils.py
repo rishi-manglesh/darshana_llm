@@ -20,6 +20,22 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
 RESULTS_DIR = PROJECT_ROOT / "results"
 
+# -- Load .env -----------------------------------------------------------------
+
+def _load_dotenv():
+    """Load .env from project root if ANTHROPIC_API_KEY not already set."""
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        return
+    env_path = PROJECT_ROOT / ".env"
+    if env_path.exists():
+        for line in open(env_path):
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, value = line.partition("=")
+                os.environ[key.strip()] = value.strip()
+
+_load_dotenv()
+
 # -- API Client ----------------------------------------------------------------
 
 MODELS = {
@@ -29,7 +45,7 @@ MODELS = {
 
 
 def get_client():
-    """Get an Anthropic client using ANTHROPIC_API_KEY env var."""
+    """Get an Anthropic client using ANTHROPIC_API_KEY from .env or environment."""
     return anthropic.Anthropic()
 
 

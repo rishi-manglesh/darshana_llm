@@ -1,0 +1,252 @@
+[
+  {
+    "query": "What distinguishes memory consolidation during sleep versus wakefulness? How do these processes differ in strengthening neural connections?",
+    "target_op": "discrimination",
+    "domain": "psychology"
+  },
+  {
+    "query": "What forces drive language evolution over generations? What mechanisms cause words and grammar to shift?",
+    "target_op": "force",
+    "domain": "history"
+  },
+  {
+    "query": "What constrains the accuracy of weather forecasting beyond 10 days? What fundamental limits exist?",
+    "target_op": "constraint",
+    "domain": "science"
+  },
+  {
+    "query": "Compare inductive versus deductive reasoning in scientific discovery. How do they lead to different types of knowledge?",
+    "target_op": "discrimination",
+    "domain": "philosophy"
+  },
+  {
+    "query": "What drives antibiotic resistance emergence in bacterial populations? What selective pressures accelerate this process?",
+    "target_op": "force",
+    "domain": "health"
+  },
+  {
+    "query": "What limits the lifespan of organisms? What biological constraints prevent indefinite survival?",
+    "target_op": "constraint",
+    "domain": "science"
+  },
+  {
+    "query": "Distinguish between expertise and experience. What makes someone truly expert versus merely experienced?",
+    "target_op": "discrimination",
+    "domain": "psychology"
+  },
+  {
+    "query": "What forces drive gentrification in urban neighborhoods? What economic and social mechanisms propel displacement?",
+    "target_op": "force",
+    "domain": "economics"
+  },
+  {
+    "query": "What constrains deep ocean exploration? What technical and physical barriers limit access to ocean depths?",
+    "target_op": "constraint",
+    "domain": "technology"
+  },
+  {
+    "query": "Compare tacit knowledge versus explicit knowledge in organizations. How do they transfer differently?",
+    "target_op": "discrimination",
+    "domain": "everyday life"
+  },
+  {
+    "query": "What drives the formation of echo chambers online? What mechanisms cause ideological segregation?",
+    "target_op": "force",
+    "domain": "technology"
+  },
+  {
+    "query": "What limits carbon capture technology effectiveness? What constraints prevent large-scale CO2 removal?",
+    "target_op": "constraint",
+    "domain": "environment"
+  },
+  {
+    "query": "What distinguishes creativity from intelligence? How do these cognitive capacities operate differently?",
+    "target_op": "discrimination",
+    "domain": "psychology"
+  },
+  {
+    "query": "What forces drive mass migration patterns? What push and pull mechanisms cause population movements?",
+    "target_op": "force",
+    "domain": "history"
+  },
+  {
+    "query": "What constrains nuclear fusion as an energy source? What barriers prevent commercial viability?",
+    "target_op": "constraint",
+    "domain": "science"
+  },
+  {
+    "query": "Compare preventive versus reactive maintenance strategies. What trade-offs determine the optimal approach?",
+    "target_op": "discrimination",
+    "domain": "everyday life"
+  },
+  {
+    "query": "What drives addiction neurobiology? What brain mechanisms reinforce compulsive behaviors?",
+    "target_op": "force",
+    "domain": "health"
+  },
+  {
+    "query": "What limits the resolution of optical microscopes? What physical constraints bound observational capability?",
+    "target_op": "constraint",
+    "domain": "science"
+  },
+  {
+    "query": "Distinguish between empathy and sympathy. How do these emotional responses differ in their mechanisms?",
+    "target_op": "discrimination",
+    "domain": "psychology"
+  },
+  {
+    "query": "What forces drive speciation in isolated populations? What mechanisms cause reproductive divergence?",
+    "target_op": "force",
+    "domain": "science"
+  },
+  {
+    "query": "What constrains quantum computer scalability? What technical barriers limit qubit counts?",
+    "target_op": "constraint",
+    "domain": "technology"
+  },
+  {
+    "query": "Compare normative versus positive economics. How do these approaches differ in their analytical goals?",
+    "target_op": "discrimination",
+    "domain": "economics"
+  },
+  {
+    "query": "What drives placebo effects? What psychological and physiological mechanisms produce real therapeutic outcomes?",
+    "target_op": "force",
+    "domain": "health"
+  },
+  {
+    "query": "What limits desalination as a water solution? What energy and cost constraints restrict widespread adoption?",
+    "target_op": "constraint",
+    "domain": "environment"
+  },
+  {
+    "query": "What distinguishes understanding from memorization in learning? How do these cognitive processes differ?",
+    "target_op": "discrimination",
+    "domain": "psychology"
+  },
+  {
+    "query": "What forces drive currency valuation changes? What market mechanisms cause exchange rate fluctuations?",
+    "target_op": "force",
+    "domain": "economics"
+  },
+  {
+    "query": "What constrains brain-computer interface development? What technical and biological limits exist?",
+    "target_op": "constraint",
+    "domain": "technology"
+  },
+  {
+    "query": "Compare deliberate practice versus naive practice. What makes training effective versus ineffective?",
+    "target_op": "discrimination",
+    "domain": "everyday life"
+  },
+  {
+    "query": "What drives immune system aging? What mechanisms cause immunosenescence?",
+    "target_op": "force",
+    "domain": "health"
+  },
+  {
+    "query": "What limits space elevator construction? What material and engineering constraints prevent realization?",
+    "target_op": "constraint",
+    "domain": "science"
+  },
+  {
+    "query": "Distinguish between correlation strength and practical significance. How do statistical and real-world importance differ?",
+    "target_op": "discrimination",
+    "domain": "science"
+  },
+  {
+    "query": "What forces drive soil degradation in agriculture? What practices and processes deplete soil quality?",
+    "target_op": "force",
+    "domain": "environment"
+  },
+  {
+    "query": "What constrains human working memory capacity? What cognitive limits bound information retention?",
+    "target_op": "constraint",
+    "domain": "psychology"
+  },
+  {
+    "query": "Compare centralized versus decentralized decision-making in organizations. What are the fundamental trade-offs?",
+    "target_op": "discrimination",
+    "domain": "economics"
+  },
+  {
+    "query": "What drives neuroplasticity in adult brains? What mechanisms enable neural reorganization?",
+    "target_op": "force",
+    "domain": "health"
+  },
+  {
+    "query": "What limits vertical farming scalability? What economic and technical constraints restrict expansion?",
+    "target_op": "constraint",
+    "domain": "environment"
+  },
+  {
+    "query": "What distinguishes wisdom from knowledge? How do these forms of understanding differ in acquisition and application?",
+    "target_op": "discrimination",
+    "domain": "philosophy"
+  },
+  {
+    "query": "What forces drive technological lock-in? What mechanisms cause inferior technologies to persist?",
+    "target_op": "force",
+    "domain": "technology"
+  },
+  {
+    "query": "What constrains gene therapy applications? What safety and delivery barriers limit therapeutic use?",
+    "target_op": "constraint",
+    "domain": "health"
+  },
+  {
+    "query": "Compare emergent versus designed systems. How do bottom-up and top-down organization produce different outcomes?",
+    "target_op": "discrimination",
+    "domain": "science"
+  },
+  {
+    "query": "What drives organizational culture formation? What mechanisms establish and perpetuate workplace norms?",
+    "target_op": "force",
+    "domain": "everyday life"
+  },
+  {
+    "query": "What limits lithium-ion battery energy density? What chemical and physical constraints bound storage capacity?",
+    "target_op": "constraint",
+    "domain": "technology"
+  },
+  {
+    "query": "Distinguish between risk and uncertainty in decision-making. How do known versus unknown probabilities differ?",
+    "target_op": "discrimination",
+    "domain": "economics"
+  },
+  {
+    "query": "What forces drive polarization in democratic societies? What mechanisms amplify political division?",
+    "target_op": "force",
+    "domain": "history"
+  },
+  {
+    "query": "What constrains CRISPR gene editing precision? What technical limitations affect targeting accuracy?",
+    "target_op": "constraint",
+    "domain": "science"
+  },
+  {
+    "query": "Compare intrinsic versus extrinsic motivation. How do these drive behavior differently over time?",
+    "target_op": "discrimination",
+    "domain": "psychology"
+  },
+  {
+    "query": "What drives market bubbles? What psychological and economic mechanisms inflate asset prices unsustainably?",
+    "target_op": "force",
+    "domain": "economics"
+  },
+  {
+    "query": "What limits human lifespan extension? What biological constraints prevent radical longevity increases?",
+    "target_op": "constraint",
+    "domain": "health"
+  },
+  {
+    "query": "What distinguishes critical thinking from analytical thinking? How do these cognitive approaches differ in methodology?",
+    "target_op": "discrimination",
+    "domain": "philosophy"
+  },
+  {
+    "query": "What forces drive the emergence of cooperation in competitive environments? What mechanisms overcome selfish incentives?",
+    "target_op": "force",
+    "domain": "psychology"
+  }
+]

@@ -44,6 +44,8 @@ Evaluate on these 5 dimensions (1-5 each):
 
 After scoring both, declare a WINNER or TIE.
 
+IMPORTANT: Judge purely on content quality. The position (A vs B) should NOT influence your judgment. A response is not better simply because it appears first or second.
+
 Respond with ONLY a JSON object:
 {
   "response_a": {"factual_accuracy": <1-5>, "reasoning_depth": <1-5>, "completeness": <1-5>, "calibration": <1-5>, "usefulness": <1-5>},
@@ -132,13 +134,16 @@ def judge_pairwise(client, model, query, response_a, response_b,
     if judgment is None:
         return None
 
-    # Remap winner
+    # Remap winner — Fix #9: log unexpected values instead of silently defaulting
     raw_winner = judgment.get("winner", "TIE")
     if raw_winner == "A":
         actual_winner = order[0]
     elif raw_winner == "B":
         actual_winner = order[1]
+    elif raw_winner == "TIE":
+        actual_winner = "TIE"
     else:
+        print(f"  WARNING: Unexpected winner value '{raw_winner}', treating as TIE")
         actual_winner = "TIE"
 
     return {

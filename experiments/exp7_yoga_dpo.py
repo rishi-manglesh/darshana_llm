@@ -101,6 +101,9 @@ def get_model_paths(model_size):
 # -- Generation ----------------------------------------------------------------
 
 _model_cache = {}
+# Fix #10: Module-level generation params, set from CLI args in main()
+_gen_temp = 0.7
+_gen_top_p = 0.9
 
 
 def generate_local(config, question, model_paths):
@@ -110,17 +113,18 @@ def generate_local(config, question, model_paths):
 
     model_path = model_paths[config]
     if model_path is None:
-        return {
-            "response": f"[SKIP: {config} model not yet trained.]",
-            "word_count": 0,
-        }
+        # Fix #11: Raise error instead of returning placeholder that gets judged
+        raise FileNotFoundError(
+            f"Model not found for config '{config}'. "
+            f"Run training first or remove this config from --configs."
+        )
 
     # Cache loaded models
     if model_path not in _model_cache:
         _model_cache[model_path] = load(model_path)
     model, tokenizer = _model_cache[model_path]
 
-    sampler = make_sampler(temp=0.7, top_p=0.9)
+    sampler = make_sampler(temp=_gen_temp, top_p=_gen_top_p)
     messages = [{"role": "user", "content": question["query"]}]
     text = tokenizer.apply_chat_template(
         messages, tokenize=False, add_generation_prompt=True
@@ -152,7 +156,16 @@ def main():
                         help="Question set: original (30), extended (45), all (75)")
     parser.add_argument("--configs", type=str, nargs="+", default=None,
                         help="Specific configs to run (default: all available)")
+    parser.add_argument("--temp", type=float, default=0.7,
+                        help="Generation temperature (default: 0.7)")
+    parser.add_argument("--top-p", type=float, default=0.9,
+                        help="Generation top-p (default: 0.9)")
     args = parser.parse_args()
+
+    # Fix #10: Set generation params from CLI
+    global _gen_temp, _gen_top_p
+    _gen_temp = args.temp
+    _gen_top_p = args.top_p
 
     model_paths = get_model_paths(args.model_size)
     exp_name = f"{EXPERIMENT_NAME}_{args.model_size}" if args.model_size != "1.5b" else EXPERIMENT_NAME

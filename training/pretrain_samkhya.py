@@ -55,8 +55,18 @@ def get_training_configs(model_name):
     }
 
 
-def prepare_training_data(corpus_path, output_path):
-    """Convert raw text corpus to JSONL training format."""
+def prepare_training_data(corpus_path, output_dir):
+    """Convert raw text corpus to train.jsonl + valid.jsonl in output_dir.
+
+    mlx_lm expects a directory with train.jsonl and valid.jsonl files.
+
+    Fix #6: Uses stratified sampling for validation split instead of taking
+    the last 10% — taking the last 10% would bias validation toward later
+    categories in an ordered corpus, defeating the purpose of ordering.
+    """
+    import random as _rnd
+    _rnd.seed(42)
+
     texts = []
     with open(corpus_path) as f:
         current = []
@@ -73,16 +83,30 @@ def prepare_training_data(corpus_path, output_path):
             if len(text) > 100:
                 texts.append(text)
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w") as f:
-        for text in texts:
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Fix #6: Stratified 90/10 split — sample every 10th item for validation
+    # This preserves the ordering in training set while getting representative validation
+    n_val = max(1, len(texts) // 10)
+    val_indices = set(range(0, len(texts), max(1, len(texts) // n_val)))
+    train_texts = [t for i, t in enumerate(texts) if i not in val_indices]
+    val_texts = [t for i, t in enumerate(texts) if i in val_indices]
+
+    train_path = output_dir / "train.jsonl"
+    with open(train_path, "w") as f:
+        for text in train_texts:
             f.write(json.dumps({"text": text}) + "\n")
 
-    print(f"  Prepared {len(texts)} training passages -> {output_path}")
-    return len(texts)
+    valid_path = output_dir / "valid.jsonl"
+    with open(valid_path, "w") as f:
+        for text in val_texts:
+            f.write(json.dumps({"text": text}) + "\n")
+
+    print(f"  Prepared {len(train_texts)} train + {len(val_texts)} valid passages -> {output_dir}")
+    return len(train_texts)
 
 
-def run_pretraining(config_name, model_name, iters=200, batch_size=2, lr="5e-5", lora_layers=16):
+def run_pretraining(config_name, model_name, iters=200, batch_size=2, lr="5e-5", num_layers=16):
     """Run continued pretraining using MLX."""
     configs = get_training_configs(model_name)
     config = configs[config_name]
@@ -93,27 +117,32 @@ def run_pretraining(config_name, model_name, iters=200, batch_size=2, lr="5e-5",
         print(f"ERROR: {corpus_path} not found. Run training/prepare_samkhya_data.py first.")
         sys.exit(1)
 
-    # Prepare JSONL training data
-    train_path = DATA_DIR / f"{config_name}_train.jsonl"
-    n_passages = prepare_training_data(corpus_path, train_path)
+    # Prepare JSONL training data — mlx_lm expects train.jsonl + valid.jsonl in a dir
+    train_data_dir = DATA_DIR / f"{config_name}_data"
+    n_passages = prepare_training_data(corpus_path, train_data_dir)
 
     # MLX training command
     print(f"\nStarting continued pretraining: {config_name}")
     print(f"  Model: {model_name}")
-    print(f"  Data: {train_path} ({n_passages} passages)")
+    print(f"  Data: {train_data_dir} ({n_passages} train passages)")
     print(f"  Output: {output_dir}")
 
     import subprocess
+    # Fix #3: Use ordered wrapper that preserves corpus ordering
+    # mlx_lm sorts by token length + shuffles batches, destroying our ordering.
+    # mlx_ordered_lora.py monkey-patches iterate_batches to iterate sequentially.
+    ordered_wrapper = str(Path(__file__).parent / "mlx_ordered_lora.py")
     cmd = [
-        sys.executable, "-m", "mlx_lm.lora",
+        sys.executable, ordered_wrapper,
         "--model", model_name,
-        "--data", str(DATA_DIR),
+        "--data", str(train_data_dir),
         "--train",
         "--adapter-path", str(output_dir / "adapters"),
         "--iters", str(iters),
         "--batch-size", str(batch_size),
         "--learning-rate", lr,
-        "--lora-layers", str(lora_layers),
+        "--num-layers", str(num_layers),
+        "--seed", "42",
     ]
 
     print(f"\n  Command: {' '.join(cmd)}")
@@ -142,14 +171,14 @@ def main():
                         help="Batch size (default: 2)")
     parser.add_argument("--lr", type=str, default="5e-5",
                         help="Learning rate (default: 5e-5)")
-    parser.add_argument("--lora-layers", type=int, default=16,
+    parser.add_argument("--num-layers", type=int, default=16,
                         help="Number of LoRA layers (default: 16)")
     args = parser.parse_args()
 
     modes = ["samkhya", "bloom", "random"] if args.mode == "all" else [args.mode]
 
     for mode in modes:
-        run_pretraining(mode, args.model, args.iters, args.batch_size, args.lr, args.lora_layers)
+        run_pretraining(mode, args.model, args.iters, args.batch_size, args.lr, args.num_layers)
 
     print(f"\nAll training complete.")
     print(f"Next: python training/fuse_adapters.py --model {args.model}")

@@ -98,6 +98,9 @@ SAMKHYA_CATEGORIES = {
 def categorize_text(text, threshold=2):
     """Classify a text passage into Samkhya categories.
 
+    Fix #5: Uses word boundary matching (regex \\b) instead of substring
+    matching to prevent false positives like "cause" matching "because".
+
     Args:
         text: the text to classify
         threshold: minimum keyword matches to assign a category
@@ -105,10 +108,20 @@ def categorize_text(text, threshold=2):
     Returns:
         list of (category_name, match_count) tuples, sorted by relevance
     """
+    import re
     lower = text.lower()
     scores = []
     for cat_name, cat_info in SAMKHYA_CATEGORIES.items():
-        count = sum(1 for kw in cat_info["keywords"] if kw.lower() in lower)
+        count = 0
+        for kw in cat_info["keywords"]:
+            # Use word boundary matching for single words,
+            # substring matching for multi-word phrases (they're specific enough)
+            if " " in kw:
+                if kw.lower() in lower:
+                    count += 1
+            else:
+                if re.search(r'\b' + re.escape(kw.lower()) + r'\b', lower):
+                    count += 1
         if count >= threshold:
             scores.append((cat_name, count))
     scores.sort(key=lambda x: x[1], reverse=True)

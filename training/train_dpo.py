@@ -9,12 +9,11 @@ Ordering modes:
   - complexity: Pairs sorted by score_delta ascending (easy->hard, Western control)
   - random: Pairs shuffled (null hypothesis)
 
-Supports:
-  - Custom base model via --base-model
-  - Pretrained model as base via --pretrained-path (for combined configs)
-  - All modes in one run via --all-modes
+CRITICAL: Uses SequentialSampler to preserve pair ordering — the whole point
+of the experiment is to test whether ORDER matters. HuggingFace Trainer uses
+RandomSampler by default, which would destroy our ordering.
 
-Uses TRL's DPOTrainer (HuggingFace) for DPO training.
+Uses LoRA (via peft) for memory-efficient training on Apple Silicon.
 
 Usage:
   python training/train_dpo.py --mode yoga --base-model Qwen/Qwen2.5-1.5B-Instruct
@@ -29,6 +28,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+SEED = 42
 
 
 # -- Config --------------------------------------------------------------------
@@ -60,8 +61,27 @@ def load_dpo_pairs(path):
     return pairs
 
 
+def validate_stages(pairs, mode):
+    """Validate that pairs have stage fields when ordering by stage.
+
+    Fix #4: Warn about missing stages instead of silently defaulting.
+    """
+    if mode not in ("yoga", "reverse"):
+        return
+
+    missing = [i for i, p in enumerate(pairs) if "stage" not in p]
+    if missing:
+        print(f"  WARNING: {len(missing)}/{len(pairs)} pairs missing 'stage' field")
+        print(f"  These will default to stage=3 (middle). First 5: {missing[:5]}")
+        if len(missing) > len(pairs) * 0.5:
+            print(f"  ERROR: >50% of pairs missing stage — ordering will be meaningless!")
+            print(f"  Check your data pipeline (prepare_dpo_data.py)")
+            sys.exit(1)
+
+
 def order_pairs(pairs, mode):
     """Order pairs according to the specified mode."""
+    random.seed(SEED)
     ordered = list(pairs)
 
     if mode == "yoga":
@@ -112,7 +132,7 @@ def get_output_dir(mode, base_model, pretrained_path=None):
 
 
 def train_dpo(mode, pairs, output_dir, base_model, pretrained_path=None):
-    """Run DPO training using TRL."""
+    """Run DPO training using TRL with SequentialSampler and LoRA."""
     model_path = pretrained_path if pretrained_path else base_model
 
     print(f"\n{'='*60}")
@@ -122,16 +142,34 @@ def train_dpo(mode, pairs, output_dir, base_model, pretrained_path=None):
     if pretrained_path:
         print(f"  (Pretrained from: {pretrained_path})")
     print(f"  Output: {output_dir}")
+    print(f"  Using: SequentialSampler (ordering preserved)")
+    print(f"  Using: LoRA (memory-efficient)")
+    print(f"  Seed: {SEED}")
     print(f"{'='*60}")
 
+    # Verify ordering
+    if mode in ("yoga", "reverse"):
+        stages = [p.get("stage", 3) for p in pairs]
+        print(f"  Stage sequence (first 10): {stages[:10]}")
+        print(f"  Stage sequence (last 10):  {stages[-10:]}")
+
     try:
+        import torch
+        from torch.utils.data import SequentialSampler
         from transformers import AutoModelForCausalLM, AutoTokenizer
         from trl import DPOConfig, DPOTrainer
         from datasets import Dataset
-    except ImportError:
-        print("ERROR: Requires trl and datasets packages.")
-        print("  pip install trl datasets transformers torch")
+        from peft import LoraConfig, get_peft_model
+    except ImportError as e:
+        print(f"ERROR: Missing package: {e}")
+        print("  pip install trl datasets transformers torch peft")
         sys.exit(1)
+
+    # Fix #1: Custom trainer with SequentialSampler to preserve ordering
+    class OrderedDPOTrainer(DPOTrainer):
+        """DPO trainer that preserves dataset ordering."""
+        def _get_train_sampler(self, dataset=None):
+            return SequentialSampler(dataset if dataset is not None else self.train_dataset)
 
     # Prepare dataset
     dataset = prepare_dpo_dataset(pairs)
@@ -142,9 +180,24 @@ def train_dpo(mode, pairs, output_dir, base_model, pretrained_path=None):
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
-    model = AutoModelForCausalLM.from_pretrained(model_path)
+    model = AutoModelForCausalLM.from_pretrained(
+        model_path,
+        dtype=torch.bfloat16,
+    )
 
-    # DPO config
+    # Fix #12: LoRA config for memory-efficient training
+    lora_config = LoraConfig(
+        r=16,
+        lora_alpha=32,
+        lora_dropout=0.05,
+        target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],
+        bias="none",
+        task_type="CAUSAL_LM",
+    )
+    model = get_peft_model(model, lora_config)
+    model.print_trainable_parameters()
+
+    # DPO config — Fix #2: explicit seed
     output_dir.mkdir(parents=True, exist_ok=True)
     training_args = DPOConfig(
         output_dir=str(output_dir),
@@ -158,23 +211,32 @@ def train_dpo(mode, pairs, output_dir, base_model, pretrained_path=None):
         bf16=True,
         max_length=512,
         max_prompt_length=256,
+        seed=SEED,
+        data_seed=SEED,
     )
 
-    trainer = DPOTrainer(
+    trainer = OrderedDPOTrainer(
         model=model,
         args=training_args,
         train_dataset=ds,
         processing_class=tokenizer,
     )
 
+    # Verify sampler type
+    sampler = trainer._get_train_sampler()
+    print(f"  Sampler type: {type(sampler).__name__}")
+    assert "Sequential" in type(sampler).__name__, \
+        f"Expected SequentialSampler but got {type(sampler).__name__}"
+
     print("  Training...")
     trainer.train()
 
-    # Save final model
+    # Save final model (merge LoRA weights)
     final_dir = output_dir / "final"
-    trainer.save_model(str(final_dir))
+    merged = model.merge_and_unload()
+    merged.save_pretrained(str(final_dir))
     tokenizer.save_pretrained(str(final_dir))
-    print(f"  Saved to: {final_dir}")
+    print(f"  Saved merged model to: {final_dir}")
 
 
 # -- Main ----------------------------------------------------------------------
@@ -211,6 +273,9 @@ def main():
         help=f"Path to DPO pairs JSONL (default: {COMBINED_PAIRS_PATH})",
     )
     args = parser.parse_args()
+
+    # Set global seeds
+    random.seed(SEED)
 
     # Determine data source
     if args.data:
@@ -250,6 +315,7 @@ def main():
 
     # Train each mode
     for mode in modes:
+        validate_stages(all_pairs, mode)
         pairs = order_pairs(all_pairs, mode)
         output_dir = get_output_dir(mode, args.base_model, pretrained)
         train_dpo(mode, pairs, output_dir, args.base_model, pretrained)

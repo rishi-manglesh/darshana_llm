@@ -1,0 +1,88 @@
+[
+  {
+    "query": "What drives habit formation? What forces make a new behavior stick or fail?",
+    "target_op": "force",
+    "domain": "everyday_practical",
+    "difficulty": "standard"
+  },
+  {
+    "query": "What drives the spread of misinformation on social media?",
+    "target_op": "force",
+    "domain": "everyday"
+  },
+  {
+    "query": "What causes race conditions in concurrent systems? What are the driving mechanisms?",
+    "target_op": "force",
+    "domain": "technical",
+    "difficulty": "standard"
+  },
+  {
+    "query": "Contrast online learning with traditional classroom education.",
+    "target_op": "discrimination",
+    "domain": "everyday"
+  },
+  {
+    "query": "What's the difference between a leader and a manager?",
+    "target_op": "discrimination",
+    "domain": "everyday"
+  },
+  {
+    "query": "What forces drive whistleblowing? What mechanisms push individuals to report misconduct?",
+    "target_op": "force",
+    "domain": "ethics",
+    "difficulty": "standard"
+  },
+  {
+    "query": "What drives the Dunning-Kruger effect? What cognitive mechanisms cause miscalibrated self-assessment?",
+    "target_op": "force",
+    "domain": "meta_cognitive",
+    "difficulty": "standard"
+  },
+  {
+    "query": "Compare correlation and causation. What distinguishes genuine causal relationships from spurious ones?",
+    "target_op": "discrimination",
+    "domain": "data_analytics",
+    "difficulty": "standard"
+  },
+  {
+    "query": "Distinguish between imitation and inspiration in creative work. Where is the boundary?",
+    "target_op": "discrimination",
+    "domain": "creative",
+    "difficulty": "standard"
+  },
+  {
+    "query": "Distinguish between horizontal and vertical scaling. When does each approach break down?",
+    "target_op": "discrimination",
+    "domain": "technical",
+    "difficulty": "standard"
+  },
+  {
+    "query": "What drives evolution? What forces cause species to change over time?",
+    "target_op": "force",
+    "domain": "biology"
+  },
+  {
+    "query": "Compare persuasion and manipulation. Where is the ethical boundary in communication?",
+    "target_op": "discrimination",
+    "domain": "communication",
+    "difficulty": "standard"
+  },
+  {
+    "query": "What constrains ethical decision-making in organizations? What limits prevent people from doing the right thing?",
+    "target_op": "constraint",
+    "domain": "ethics",
+    "difficulty": "standard"
+  },
+  {
+    "query": "When should an enterprise build custom software versus buying an existing solution? What factors determine the right approach?",
+    "target_op": "discrimination",
+    "domain": "enterprise",
+    "difficulty": "standard"
+  },
+  {
+    "query": "Compare utilitarian and deontological ethics. How do they resolve moral dilemmas differently?",
+    "target_op": "discrimination",
+    "domain": "ethics",
+    "difficulty": "standard"
+  }
+]

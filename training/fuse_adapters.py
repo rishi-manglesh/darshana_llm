@@ -26,6 +26,13 @@ MODEL_SIZE_MAP = {
 
 PRETRAIN_CONFIGS = ["samkhya", "bloom", "random"]
 
+SFT_CONFIGS = {
+    "yoga-sft-small": "yoga-sft-small",
+    "yoga-sft": "yoga-sft",
+    "reverse-sft": "reverse-sft",
+    "random-sft": "random-sft",
+}
+
 
 def fuse_adapter(model_name, config_name):
     """Fuse a single LoRA adapter into a full model."""
@@ -69,11 +76,18 @@ def main():
     parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-1.5B-Instruct",
                         help="Base model name")
     parser.add_argument("--config", type=str, default=None,
-                        choices=PRETRAIN_CONFIGS,
+                        choices=PRETRAIN_CONFIGS + list(SFT_CONFIGS.keys()),
                         help="Specific config to fuse (default: all)")
+    parser.add_argument("--sft", action="store_true",
+                        help="Fuse SFT adapters instead of pretrain adapters")
     args = parser.parse_args()
 
     configs = [args.config] if args.config else PRETRAIN_CONFIGS
+
+    # Also fuse SFT adapters if --sft flag
+    if args.sft:
+        sft_names = [args.config] if args.config and args.config in SFT_CONFIGS else list(SFT_CONFIGS.keys())
+        configs = sft_names
 
     print(f"\nFusing LoRA adapters for {args.model}")
     successes = 0

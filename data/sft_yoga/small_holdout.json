@@ -1,0 +1,102 @@
+[
+  {
+    "query": "Compare fiscal policy and monetary policy. How do they differ in approach and impact?",
+    "target_op": "discrimination",
+    "domain": "economics"
+  },
+  {
+    "query": "What distinguishes a recession from a depression? How are they categorized differently?",
+    "target_op": "discrimination",
+    "domain": "economics"
+  },
+  {
+    "query": "Compare renting versus buying a home. What are the trade-offs?",
+    "target_op": "discrimination",
+    "domain": "everyday"
+  },
+  {
+    "query": "What's the difference between a leader and a manager?",
+    "target_op": "discrimination",
+    "domain": "everyday"
+  },
+  {
+    "query": "Contrast online learning with traditional classroom education.",
+    "target_op": "discrimination",
+    "domain": "everyday"
+  },
+  {
+    "query": "How do stocks and bonds differ as investments?",
+    "target_op": "discrimination",
+    "domain": "everyday"
+  },
+  {
+    "query": "What causes a stock market crash? What are the driving mechanisms?",
+    "target_op": "force",
+    "domain": "economics"
+  },
+  {
+    "query": "What drives economic growth in developing countries?",
+    "target_op": "force",
+    "domain": "economics"
+  },
+  {
+    "query": "What drives cell division? What triggers and propels the process?",
+    "target_op": "force",
+    "domain": "biology"
+  },
+  {
+    "query": "What causes an allergic reaction? Describe the mechanism.",
+    "target_op": "force",
+    "domain": "biology"
+  },
+  {
+    "query": "What drives people to change careers? What forces push them?",
+    "target_op": "force",
+    "domain": "everyday"
+  },
+  {
+    "query": "What drives the spread of misinformation on social media?",
+    "target_op": "force",
+    "domain": "everyday"
+  },
+  {
+    "query": "What causes burnout at work? What are the mechanisms?",
+    "target_op": "force",
+    "domain": "everyday"
+  },
+  {
+    "query": "What limits economic growth? What are the binding constraints?",
+    "target_op": "constraint",
+    "domain": "economics"
+  },
+  {
+    "query": "What constraints does a central bank face in setting interest rates?",
+    "target_op": "constraint",
+    "domain": "economics"
+  },
+  {
+    "query": "What constrains population growth in an ecosystem?",
+    "target_op": "constraint",
+    "domain": "biology"
+  },
+  {
+    "query": "What limits the human lifespan? What biological boundaries exist?",
+    "target_op": "constraint",
+    "domain": "biology"
+  },
+  {
+    "query": "What limits how fast a person can learn a new skill?",
+    "target_op": "constraint",
+    "domain": "everyday"
+  },
+  {
+    "query": "What bottlenecks restrict affordable housing in cities?",
+    "target_op": "constraint",
+    "domain": "everyday"
+  },
+  {
+    "query": "What limits productivity in remote work?",
+    "target_op": "constraint",
+    "domain": "everyday"
+  }
+]

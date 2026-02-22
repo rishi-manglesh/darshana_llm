@@ -1,0 +1,23 @@
+{
+  "total_raw": 978,
+  "after_filter": 975,
+  "after_dedup": 255,
+  "train_pairs": 215,
+  "test_queries": 9,
+  "min_delta": 2,
+  "stage_distribution": {
+    "1": 44,
+    "2": 43,
+    "3": 41,
+    "4": 46,
+    "5": 41
+  },
+  "source_distribution": {
+    "exp5_vedanta": 57,
+    "exp1_vritti": 50,
+    "vedic_darshana": 31,
+    "vedic_dharmic": 22,
+    "exp3_mimamsa": 41,
+    "extended_generation": 14
+  }
+}
