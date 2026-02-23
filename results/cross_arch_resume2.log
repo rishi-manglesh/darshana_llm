@@ -1,0 +1,322 @@
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+############################################################
+  ARCHITECTURE: llama3b (mlx-community/Llama-3.2-3B-Instruct)
+############################################################
+
+  SKIP: Gated adapter already exists for llama3b (27811400 bytes)
+
+  SKIP: Reverse adapter already exists for llama3b (27811400 bytes)
+
+============================================================
+GENERATING RESPONSES: llama3b
+  200 questions × 3 configs = 600 total
+  Already done: 400
+============================================================
+
+  Loading base_llama3b...
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 158703.39it/s]
+
+  Loading gated_llama3b...
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 95948.13it/s]
+
+  Loading reverse_llama3b...
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 68759.08it/s]
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 196608.00it/s]
+Loading datasets
+Training
+Trainable parameters: 0.165% (6.291M/3821.080M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/3 [00:00<?, ?it/s]Calculating loss...:  33%|███▎      | 1/3 [00:01<00:03,  1.50s/it]Calculating loss...:  67%|██████▋   | 2/3 [00:02<00:01,  1.35s/it]Calculating loss...: 100%|██████████| 3/3 [00:03<00:00,  1.30s/it]Calculating loss...: 100%|██████████| 3/3 [00:03<00:00,  1.33s/it]
+Iter 1: Val loss 1.587, Val took 3.992s
+Iter 10: Train loss 1.686, Learning Rate 1.000e-05, It/sec 0.496, Tokens/sec 432.556, Trained Tokens 8716, Peak mem 12.016 GB
+Iter 20: Train loss 1.432, Learning Rate 1.000e-05, It/sec 0.484, Tokens/sec 431.859, Trained Tokens 17644, Peak mem 12.320 GB
+Calculating loss...:   0%|          | 0/3 [00:00<?, ?it/s]Calculating loss...:  33%|███▎      | 1/3 [00:01<00:02,  1.24s/it]Calculating loss...:  67%|██████▋   | 2/3 [00:02<00:01,  1.24s/it]Calculating loss...: 100%|██████████| 3/3 [00:03<00:00,  1.33s/it]Calculating loss...: 100%|██████████| 3/3 [00:03<00:00,  1.30s/it]
+Iter 30: Val loss 1.122, Val took 3.914s
+Iter 30: Train loss 1.310, Learning Rate 1.000e-05, It/sec 0.503, Tokens/sec 431.541, Trained Tokens 26216, Peak mem 12.320 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 255490.60it/s]
+Loading datasets
+Training
+Loading fine-tuned weights from /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors
+Trainable parameters: 0.165% (6.291M/3821.080M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/6 [00:00<?, ?it/s]Calculating loss...:  17%|█▋        | 1/6 [00:01<00:06,  1.25s/it]Calculating loss...:  33%|███▎      | 2/6 [00:02<00:05,  1.36s/it]Calculating loss...:  50%|█████     | 3/6 [00:04<00:04,  1.39s/it]Calculating loss...:  67%|██████▋   | 4/6 [00:05<00:02,  1.45s/it]Calculating loss...:  83%|████████▎ | 5/6 [00:06<00:01,  1.37s/it]Calculating loss...: 100%|██████████| 6/6 [00:08<00:00,  1.36s/it]Calculating loss...: 100%|██████████| 6/6 [00:08<00:00,  1.37s/it]
+Iter 1: Val loss 1.132, Val took 8.233s
+Iter 10: Train loss 1.218, Learning Rate 1.000e-05, It/sec 0.473, Tokens/sec 427.460, Trained Tokens 9033, Peak mem 12.320 GB
+Iter 20: Train loss 1.131, Learning Rate 1.000e-05, It/sec 0.479, Tokens/sec 435.262, Trained Tokens 18111, Peak mem 12.320 GB
+Calculating loss...:   0%|          | 0/6 [00:00<?, ?it/s]Calculating loss...:  17%|█▋        | 1/6 [00:01<00:06,  1.24s/it]Calculating loss...:  33%|███▎      | 2/6 [00:02<00:04,  1.24s/it]Calculating loss...:  50%|█████     | 3/6 [00:03<00:03,  1.33s/it]Calculating loss...:  67%|██████▋   | 4/6 [00:05<00:02,  1.36s/it]Calculating loss...:  83%|████████▎ | 5/6 [00:06<00:01,  1.35s/it]Calculating loss...: 100%|██████████| 6/6 [00:08<00:00,  1.42s/it]Calculating loss...: 100%|██████████| 6/6 [00:08<00:00,  1.37s/it]
+Iter 30: Val loss 1.077, Val took 8.207s
+Iter 30: Train loss 1.160, Learning Rate 1.000e-05, It/sec 0.482, Tokens/sec 440.303, Trained Tokens 27241, Peak mem 12.320 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 222706.41it/s]
+Loading datasets
+Training
+Loading fine-tuned weights from /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors
+Trainable parameters: 0.165% (6.291M/3821.080M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/9 [00:00<?, ?it/s]Calculating loss...:  11%|█         | 1/9 [00:01<00:10,  1.25s/it]Calculating loss...:  22%|██▏       | 2/9 [00:02<00:09,  1.42s/it]Calculating loss...:  33%|███▎      | 3/9 [00:04<00:08,  1.42s/it]Calculating loss...:  44%|████▍     | 4/9 [00:05<00:07,  1.43s/it]Calculating loss...:  56%|█████▌    | 5/9 [00:06<00:05,  1.36s/it]Calculating loss...:  67%|██████▋   | 6/9 [00:08<00:03,  1.32s/it]Calculating loss...:  78%|███████▊  | 7/9 [00:09<00:02,  1.33s/it]Calculating loss...:  89%|████████▉ | 8/9 [00:10<00:01,  1.33s/it]Calculating loss...: 100%|██████████| 9/9 [00:12<00:00,  1.36s/it]Calculating loss...: 100%|██████████| 9/9 [00:12<00:00,  1.36s/it]
+Iter 1: Val loss 1.138, Val took 12.241s
+Iter 10: Train loss 1.160, Learning Rate 1.000e-05, It/sec 0.493, Tokens/sec 438.119, Trained Tokens 8881, Peak mem 12.292 GB
+Iter 20: Train loss 1.101, Learning Rate 1.000e-05, It/sec 0.475, Tokens/sec 437.700, Trained Tokens 18095, Peak mem 12.320 GB
+Calculating loss...:   0%|          | 0/9 [00:00<?, ?it/s]Calculating loss...:  11%|█         | 1/9 [00:01<00:09,  1.24s/it]Calculating loss...:  22%|██▏       | 2/9 [00:02<00:09,  1.30s/it]Calculating loss...:  33%|███▎      | 3/9 [00:03<00:07,  1.32s/it]Calculating loss...:  44%|████▍     | 4/9 [00:05<00:06,  1.36s/it]Calculating loss...:  56%|█████▌    | 5/9 [00:06<00:05,  1.38s/it]Calculating loss...:  67%|██████▋   | 6/9 [00:08<00:04,  1.40s/it]Calculating loss...:  78%|███████▊  | 7/9 [00:09<00:02,  1.44s/it]Calculating loss...:  89%|████████▉ | 8/9 [00:10<00:01,  1.38s/it]Calculating loss...: 100%|██████████| 9/9 [00:12<00:00,  1.34s/it]Calculating loss...: 100%|██████████| 9/9 [00:12<00:00,  1.36s/it]
+Iter 30: Val loss 1.131, Val took 12.213s
+Iter 30: Train loss 1.234, Learning Rate 1.000e-05, It/sec 0.486, Tokens/sec 441.901, Trained Tokens 27194, Peak mem 12.320 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 244328.39it/s]
+Loading datasets
+Training
+Loading fine-tuned weights from /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors
+Trainable parameters: 0.165% (6.291M/3821.080M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/12 [00:00<?, ?it/s]Calculating loss...:   8%|▊         | 1/12 [00:01<00:15,  1.44s/it]Calculating loss...:  17%|█▋        | 2/12 [00:02<00:14,  1.43s/it]Calculating loss...:  25%|██▌       | 3/12 [00:04<00:12,  1.35s/it]Calculating loss...:  33%|███▎      | 4/12 [00:05<00:11,  1.38s/it]Calculating loss...:  42%|████▏     | 5/12 [00:06<00:09,  1.40s/it]Calculating loss...:  50%|█████     | 6/12 [00:08<00:08,  1.44s/it]Calculating loss...:  58%|█████▊    | 7/12 [00:10<00:07,  1.47s/it]Calculating loss...:  67%|██████▋   | 8/12 [00:11<00:05,  1.40s/it]Calculating loss...:  75%|███████▌  | 9/12 [00:12<00:04,  1.38s/it]Calculating loss...:  83%|████████▎ | 10/12 [00:13<00:02,  1.37s/it]Calculating loss...:  92%|█████████▏| 11/12 [00:15<00:01,  1.36s/it]Calculating loss...: 100%|██████████| 12/12 [00:16<00:00,  1.32s/it]Calculating loss...: 100%|██████████| 12/12 [00:16<00:00,  1.38s/it]
+Iter 1: Val loss 1.228, Val took 16.544s
+Iter 10: Train loss 1.032, Learning Rate 1.000e-05, It/sec 0.476, Tokens/sec 435.009, Trained Tokens 9142, Peak mem 12.320 GB
+Iter 20: Train loss 1.227, Learning Rate 1.000e-05, It/sec 0.485, Tokens/sec 440.606, Trained Tokens 18229, Peak mem 12.320 GB
+Calculating loss...:   0%|          | 0/12 [00:00<?, ?it/s]Calculating loss...:   8%|▊         | 1/12 [00:01<00:13,  1.24s/it]Calculating loss...:  17%|█▋        | 2/12 [00:02<00:12,  1.30s/it]Calculating loss...:  25%|██▌       | 3/12 [00:03<00:11,  1.27s/it]Calculating loss...:  33%|███▎      | 4/12 [00:05<00:10,  1.33s/it]Calculating loss...:  42%|████▏     | 5/12 [00:06<00:09,  1.37s/it]Calculating loss...:  50%|█████     | 6/12 [00:08<00:08,  1.39s/it]Calculating loss...:  58%|█████▊    | 7/12 [00:09<00:07,  1.43s/it]Calculating loss...:  67%|██████▋   | 8/12 [00:11<00:05,  1.43s/it]Calculating loss...:  75%|███████▌  | 9/12 [00:12<00:04,  1.40s/it]Calculating loss...:  83%|████████▎ | 10/12 [00:13<00:02,  1.35s/it]Calculating loss...:  92%|█████████▏| 11/12 [00:15<00:01,  1.41s/it]Calculating loss...: 100%|██████████| 12/12 [00:16<00:00,  1.39s/it]Calculating loss...: 100%|██████████| 12/12 [00:16<00:00,  1.38s/it]
+Iter 30: Val loss 1.232, Val took 16.509s
+Iter 30: Train loss 1.006, Learning Rate 1.000e-05, It/sec 0.466, Tokens/sec 436.450, Trained Tokens 27587, Peak mem 12.320 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 211477.51it/s]
+Loading datasets
+Training
+Loading fine-tuned weights from /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors
+Trainable parameters: 0.165% (6.291M/3821.080M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/15 [00:00<?, ?it/s]Calculating loss...:   7%|▋         | 1/15 [00:01<00:17,  1.26s/it]Calculating loss...:  13%|█▎        | 2/15 [00:02<00:18,  1.42s/it]Calculating loss...:  20%|██        | 3/15 [00:04<00:17,  1.43s/it]Calculating loss...:  27%|██▋       | 4/15 [00:05<00:15,  1.43s/it]Calculating loss...:  33%|███▎      | 5/15 [00:06<00:13,  1.39s/it]Calculating loss...:  40%|████      | 6/15 [00:08<00:12,  1.41s/it]Calculating loss...:  47%|████▋     | 7/15 [00:09<00:11,  1.38s/it]Calculating loss...:  53%|█████▎    | 8/15 [00:10<00:09,  1.34s/it]Calculating loss...:  60%|██████    | 9/15 [00:12<00:08,  1.40s/it]Calculating loss...:  67%|██████▋   | 10/15 [00:13<00:07,  1.41s/it]Calculating loss...:  73%|███████▎  | 11/15 [00:15<00:05,  1.45s/it]Calculating loss...:  80%|████████  | 12/15 [00:16<00:04,  1.41s/it]Calculating loss...:  87%|████████▋ | 13/15 [00:18<00:02,  1.45s/it]Calculating loss...:  93%|█████████▎| 14/15 [00:19<00:01,  1.39s/it]Calculating loss...: 100%|██████████| 15/15 [00:21<00:00,  1.40s/it]Calculating loss...: 100%|██████████| 15/15 [00:21<00:00,  1.40s/it]
+Iter 1: Val loss 1.288, Val took 21.043s
+Iter 10: Train loss 1.235, Learning Rate 1.000e-05, It/sec 0.468, Tokens/sec 436.543, Trained Tokens 9335, Peak mem 12.320 GB
+Iter 20: Train loss 1.074, Learning Rate 1.000e-05, It/sec 0.447, Tokens/sec 432.309, Trained Tokens 19005, Peak mem 12.320 GB
+Calculating loss...:   0%|          | 0/15 [00:00<?, ?it/s]Calculating loss...:   7%|▋         | 1/15 [00:01<00:17,  1.24s/it]Calculating loss...:  13%|█▎        | 2/15 [00:02<00:17,  1.35s/it]Calculating loss...:  20%|██        | 3/15 [00:04<00:16,  1.34s/it]Calculating loss...:  27%|██▋       | 4/15 [00:05<00:15,  1.42s/it]Calculating loss...:  33%|███▎      | 5/15 [00:06<00:13,  1.36s/it]Calculating loss...:  40%|████      | 6/15 [00:08<00:12,  1.38s/it]Calculating loss...:  47%|████▋     | 7/15 [00:09<00:11,  1.39s/it]Calculating loss...:  53%|█████▎    | 8/15 [00:10<00:09,  1.38s/it]Calculating loss...:  60%|██████    | 9/15 [00:12<00:08,  1.43s/it]Calculating loss...:  67%|██████▋   | 10/15 [00:13<00:06,  1.37s/it]Calculating loss...:  73%|███████▎  | 11/15 [00:15<00:05,  1.36s/it]Calculating loss...:  80%|████████  | 12/15 [00:16<00:04,  1.38s/it]Calculating loss...:  87%|████████▋ | 13/15 [00:18<00:02,  1.43s/it]Calculating loss...:  93%|█████████▎| 14/15 [00:19<00:01,  1.46s/it]Calculating loss...: 100%|██████████| 15/15 [00:21<00:00,  1.45s/it]Calculating loss...: 100%|██████████| 15/15 [00:21<00:00,  1.40s/it]
+Iter 30: Val loss 1.342, Val took 21.003s
+Iter 30: Train loss 0.845, Learning Rate 1.000e-05, It/sec 0.492, Tokens/sec 441.401, Trained Tokens 27982, Peak mem 12.320 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 240821.28it/s]
+Loading datasets
+Training
+Trainable parameters: 0.165% (6.291M/3821.080M)
+Starting training..., iters: 135
+Calculating loss...:   0%|          | 0/15 [00:00<?, ?it/s]Calculating loss...:   7%|▋         | 1/15 [00:01<00:17,  1.26s/it]Calculating loss...:  13%|█▎        | 2/15 [00:02<00:17,  1.36s/it]Calculating loss...:  20%|██        | 3/15 [00:04<00:16,  1.39s/it]Calculating loss...:  27%|██▋       | 4/15 [00:05<00:15,  1.45s/it]Calculating loss...:  33%|███▎      | 5/15 [00:06<00:14,  1.41s/it]Calculating loss...:  40%|████      | 6/15 [00:08<00:13,  1.45s/it]Calculating loss...:  47%|████▋     | 7/15 [00:09<00:11,  1.42s/it]Calculating loss...:  53%|█████▎    | 8/15 [00:11<00:09,  1.42s/it]Calculating loss...:  60%|██████    | 9/15 [00:12<00:08,  1.42s/it]Calculating loss...:  67%|██████▋   | 10/15 [00:13<00:06,  1.37s/it]Calculating loss...:  73%|███████▎  | 11/15 [00:15<00:05,  1.33s/it]Calculating loss...:  80%|████████  | 12/15 [00:16<00:03,  1.33s/it]Calculating loss...:  87%|████████▋ | 13/15 [00:17<00:02,  1.36s/it]Calculating loss...:  93%|█████████▎| 14/15 [00:19<00:01,  1.41s/it]Calculating loss...: 100%|██████████| 15/15 [00:21<00:00,  1.45s/it]Calculating loss...: 100%|██████████| 15/15 [00:21<00:00,  1.40s/it]
+Iter 1: Val loss 1.701, Val took 21.047s
+Iter 10: Train loss 1.751, Learning Rate 1.000e-05, It/sec 0.478, Tokens/sec 439.097, Trained Tokens 9194, Peak mem 12.292 GB
+Iter 20: Train loss 1.509, Learning Rate 1.000e-05, It/sec 0.456, Tokens/sec 440.438, Trained Tokens 18850, Peak mem 12.320 GB
+Iter 30: Train loss 1.389, Learning Rate 1.000e-05, It/sec 0.450, Tokens/sec 428.133, Trained Tokens 28369, Peak mem 12.320 GB
+Iter 40: Train loss 1.407, Learning Rate 1.000e-05, It/sec 0.474, Tokens/sec 436.301, Trained Tokens 37578, Peak mem 12.630 GB
+Iter 50: Train loss 1.363, Learning Rate 1.000e-05, It/sec 0.478, Tokens/sec 439.670, Trained Tokens 46768, Peak mem 12.630 GB
+Iter 60: Train loss 1.281, Learning Rate 1.000e-05, It/sec 0.466, Tokens/sec 440.702, Trained Tokens 56220, Peak mem 12.630 GB
+Iter 70: Train loss 1.382, Learning Rate 1.000e-05, It/sec 0.447, Tokens/sec 429.025, Trained Tokens 65811, Peak mem 12.630 GB
+Iter 80: Train loss 1.397, Learning Rate 1.000e-05, It/sec 0.466, Tokens/sec 437.918, Trained Tokens 75215, Peak mem 12.630 GB
+Iter 90: Train loss 1.319, Learning Rate 1.000e-05, It/sec 0.473, Tokens/sec 441.833, Trained Tokens 84565, Peak mem 12.630 GB
+Iter 100: Train loss 1.397, Learning Rate 1.000e-05, It/sec 0.469, Tokens/sec 432.370, Trained Tokens 93783, Peak mem 12.630 GB
+Iter 100: Saved adapter weights to /Users/rishimanglesh/Projects/darshana_llm/models/phi35-reverse-sft-1ep/adapters/adapters.safetensors and /Users/rishimanglesh/Projects/darshana_llm/models/phi35-reverse-sft-1ep/adapters/0000100_adapters.safetensors.
+Iter 110: Train loss 1.245, Learning Rate 1.000e-05, It/sec 0.480, Tokens/sec 435.894, Trained Tokens 102869, Peak mem 12.630 GB
+Iter 120: Train loss 1.393, Learning Rate 1.000e-05, It/sec 0.463, Tokens/sec 433.254, Trained Tokens 112224, Peak mem 12.630 GB
+Iter 130: Train loss 1.161, Learning Rate 1.000e-05, It/sec 0.479, Tokens/sec 441.924, Trained Tokens 121454, Peak mem 12.630 GB
+Calculating loss...:   0%|          | 0/15 [00:00<?, ?it/s]Calculating loss...:   7%|▋         | 1/15 [00:01<00:19,  1.43s/it]Calculating loss...:  13%|█▎        | 2/15 [00:02<00:17,  1.32s/it]Calculating loss...:  20%|██        | 3/15 [00:04<00:15,  1.33s/it]Calculating loss...:  27%|██▋       | 4/15 [00:05<00:14,  1.29s/it]Calculating loss...:  33%|███▎      | 5/15 [00:06<00:12,  1.28s/it]Calculating loss...:  40%|████      | 6/15 [00:08<00:12,  1.36s/it]Calculating loss...:  47%|████▋     | 7/15 [00:09<00:11,  1.38s/it]Calculating loss...:  53%|█████▎    | 8/15 [00:10<00:09,  1.37s/it]Calculating loss...:  60%|██████    | 9/15 [00:12<00:08,  1.39s/it]Calculating loss...:  67%|██████▋   | 10/15 [00:13<00:07,  1.43s/it]Calculating loss...:  73%|███████▎  | 11/15 [00:15<00:05,  1.40s/it]Calculating loss...:  80%|████████  | 12/15 [00:16<00:04,  1.44s/it]Calculating loss...:  87%|████████▋ | 13/15 [00:18<00:02,  1.44s/it]Calculating loss...:  93%|█████████▎| 14/15 [00:19<00:01,  1.43s/it]Calculating loss...: 100%|██████████| 15/15 [00:21<00:00,  1.46s/it]Calculating loss...: 100%|██████████| 15/15 [00:21<00:00,  1.40s/it]
+Iter 135: Val loss 1.244, Val took 21.008s
+Iter 135: Train loss 1.437, Learning Rate 1.000e-05, It/sec 0.931, Tokens/sec 434.861, Trained Tokens 126126, Peak mem 12.630 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/phi35-reverse-sft-1ep/adapters/adapters.safetensors.
+  Progress: 450/600
+  Progress: 500/600
+  Progress: 550/600
+  Progress: 600/600
+
+  GENERATION COMPLETE: llama3b (600 total responses)
+
+============================================================
+H2H JUDGING: llama3b (gated vs reverse)
+  200 questions, 0 already judged
+============================================================
+  Progress: 20/200 | Gated 13 Rev 7 Tie 0
+  Progress: 40/200 | Gated 24 Rev 15 Tie 1
+  Progress: 60/200 | Gated 39 Rev 17 Tie 4
+  Progress: 80/200 | Gated 51 Rev 24 Tie 5
+  Progress: 100/200 | Gated 60 Rev 34 Tie 6
+  Progress: 120/200 | Gated 73 Rev 37 Tie 10
+  Progress: 140/200 | Gated 84 Rev 43 Tie 13
+  Progress: 160/200 | Gated 91 Rev 54 Tie 15
+  Progress: 180/200 | Gated 107 Rev 58 Tie 15
+  Progress: 200/200 | Gated 120 Rev 65 Tie 15
+
+  JUDGING COMPLETE: llama3b (200 judgments, 0 errors)
+
+============================================================
+  LLAMA3B — GATED vs REVERSE H2H
+============================================================
+  Gated: 120 (60.0%)
+  Reverse: 65 (32.5%)
+  Tie: 15 (7.5%)
+  CI: [53.0-66.5%]
+  Significant: YES
+
+  Per-dimension (gated - reverse):
+    factual_accuracy     +0.18
+    reasoning_depth      +0.15
+    completeness         +0.29
+    calibration          +0.10
+    usefulness           +0.22
+
+############################################################
+  ARCHITECTURE: phi3.5 (mlx-community/Phi-3.5-mini-instruct)
+############################################################
+
+============================================================
+STAGE-GATED TRAINING: phi3.5 (mlx-community/Phi-3.5-mini-instruct)
+============================================================
+
+  Gate 1/5: stages 1-1, 54 train, 6 valid
+  Gate 1 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors
+
+  Gate 2/5: stages 1-2, 108 train, 12 valid
+  Gate 2 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors
+
+  Gate 3/5: stages 1-3, 162 train, 18 valid
+  Gate 3 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors
+
+  Gate 4/5: stages 1-4, 216 train, 24 valid
+  Gate 4 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors
+
+  Gate 5/5: stages 1-5, 270 train, 30 valid
+  Gate 5 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/phi35-gated-sft-1ep/adapters/adapters.safetensors
+
+  GATED TRAINING COMPLETE: phi35
+
+============================================================
+REVERSE TRAINING: phi3.5 (mlx-community/Phi-3.5-mini-instruct)
+  270 train, 135 iters (1 epoch)
+============================================================
+
+  REVERSE TRAINING COMPLETE: phi35
+
+============================================================
+GENERATING RESPONSES: phi3.5
+  200 questions × 3 configs = 600 total
+  Already done: 0
+============================================================
+
+  Loading base_phi35...
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 149796.57it/s]
+  Progress: 50/600
+  Progress: 100/600
+  Progress: 150/600
+  Progress: 200/600
+
+  Loading gated_phi35...
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 139422.85it/s]
+  Progress: 250/600
+  Progress: 300/600
+  Progress: 350/600
+  Progress: 400/600
+
+  Loading reverse_phi35...
+Fetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]Fetching 12 files: 100%|██████████| 12/12 [00:00<00:00, 122461.43it/s]
+  Progress: 450/600
+  Progress: 500/600
+  Progress: 550/600
+  Progress: 600/600
+
+  GENERATION COMPLETE: phi3.5 (600 total responses)
+
+============================================================
+H2H JUDGING: phi3.5 (gated vs reverse)
+  200 questions, 0 already judged
+============================================================
+  Progress: 20/200 | Gated 14 Rev 6 Tie 0
+  Progress: 40/200 | Gated 30 Rev 10 Tie 0
+  Progress: 60/200 | Gated 42 Rev 17 Tie 1
+  Progress: 80/200 | Gated 52 Rev 25 Tie 3
+  Progress: 100/200 | Gated 62 Rev 31 Tie 7
+  Progress: 120/200 | Gated 72 Rev 41 Tie 7
+  Progress: 140/200 | Gated 82 Rev 51 Tie 7
+  Progress: 160/200 | Gated 97 Rev 54 Tie 9
+  Progress: 180/200 | Gated 109 Rev 61 Tie 10
+  Progress: 200/200 | Gated 120 Rev 68 Tie 12
+
+  JUDGING COMPLETE: phi3.5 (200 judgments, 0 errors)
+
+============================================================
+  PHI3.5 — GATED vs REVERSE H2H
+============================================================
+  Gated: 120 (60.0%)
+  Reverse: 68 (34.0%)
+  Tie: 12 (6.0%)
+  CI: [53.0-67.0%]
+  Significant: YES
+
+  Per-dimension (gated - reverse):
+    factual_accuracy     +0.04
+    reasoning_depth      +0.28
+    completeness         +0.27
+    calibration          +0.12
+    usefulness           +0.22
+
+############################################################
+  CROSS-ARCHITECTURE SUMMARY
+  Total time: 4.2 hours
+############################################################
+
+============================================================
+  LLAMA3B — GATED vs REVERSE H2H
+============================================================
+  Gated: 120 (60.0%)
+  Reverse: 65 (32.5%)
+  Tie: 15 (7.5%)
+  CI: [53.0-66.5%]
+  Significant: YES
+
+  Per-dimension (gated - reverse):
+    factual_accuracy     +0.18
+    reasoning_depth      +0.15
+    completeness         +0.29
+    calibration          +0.10
+    usefulness           +0.22
+
+============================================================
+  PHI3.5 — GATED vs REVERSE H2H
+============================================================
+  Gated: 120 (60.0%)
+  Reverse: 68 (34.0%)
+  Tie: 12 (6.0%)
+  CI: [53.0-67.0%]
+  Significant: YES
+
+  Per-dimension (gated - reverse):
+    factual_accuracy     +0.04
+    reasoning_depth      +0.28
+    completeness         +0.27
+    calibration          +0.12
+    usefulness           +0.22
+
+  Architecture    Gated Win%   Significant?
+  ─────────────────────────────────────────────
+  llama3b          60.0%        [53-66%]  YES
+  phi3.5           60.0%        [53-67%]  YES
+  qwen3b           62.0%                  —
+
+  VERDICT: Gated > Reverse on 2/3 architectures
+  CROSS-ARCHITECTURE VALIDATION: CONFIRMED

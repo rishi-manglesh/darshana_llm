@@ -1,0 +1,189 @@
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 137196.86it/s]
+Loading datasets
+Training
+Trainable parameters: 0.216% (6.947M/3212.750M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/3 [00:00<?, ?it/s]Calculating loss...:  33%|███▎      | 1/3 [00:01<00:02,  1.22s/it]Calculating loss...:  67%|██████▋   | 2/3 [00:02<00:01,  1.08s/it]Calculating loss...: 100%|██████████| 3/3 [00:03<00:00,  1.00it/s]Calculating loss...: 100%|██████████| 3/3 [00:03<00:00,  1.03s/it]
+Iter 1: Val loss 2.620, Val took 3.101s
+Iter 10: Train loss 2.401, Learning Rate 1.000e-05, It/sec 0.584, Tokens/sec 451.025, Trained Tokens 7718, Peak mem 10.158 GB
+Iter 20: Train loss 1.949, Learning Rate 1.000e-05, It/sec 0.601, Tokens/sec 470.981, Trained Tokens 15557, Peak mem 10.463 GB
+Calculating loss...:   0%|          | 0/3 [00:00<?, ?it/s]Calculating loss...:  33%|███▎      | 1/3 [00:00<00:01,  1.11it/s]Calculating loss...:  67%|██████▋   | 2/3 [00:01<00:00,  1.06it/s]Calculating loss...: 100%|██████████| 3/3 [00:02<00:00,  1.01it/s]Calculating loss...: 100%|██████████| 3/3 [00:02<00:00,  1.03it/s]
+Iter 30: Val loss 1.584, Val took 2.923s
+Iter 30: Train loss 1.743, Learning Rate 1.000e-05, It/sec 0.632, Tokens/sec 481.311, Trained Tokens 23176, Peak mem 10.463 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 158703.39it/s]
+Loading datasets
+Training
+Loading fine-tuned weights from /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors
+Trainable parameters: 0.216% (6.947M/3212.750M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/6 [00:00<?, ?it/s]Calculating loss...:  17%|█▋        | 1/6 [00:00<00:04,  1.04it/s]Calculating loss...:  33%|███▎      | 2/6 [00:02<00:04,  1.01s/it]Calculating loss...:  50%|█████     | 3/6 [00:03<00:03,  1.03s/it]Calculating loss...:  67%|██████▋   | 4/6 [00:04<00:02,  1.04s/it]Calculating loss...:  83%|████████▎ | 5/6 [00:05<00:01,  1.01s/it]Calculating loss...: 100%|██████████| 6/6 [00:06<00:00,  1.00s/it]Calculating loss...: 100%|██████████| 6/6 [00:06<00:00,  1.01s/it]
+Iter 1: Val loss 1.657, Val took 6.059s
+Iter 10: Train loss 1.685, Learning Rate 1.000e-05, It/sec 0.582, Tokens/sec 462.364, Trained Tokens 7943, Peak mem 10.463 GB
+Iter 20: Train loss 1.614, Learning Rate 1.000e-05, It/sec 0.597, Tokens/sec 473.019, Trained Tokens 15860, Peak mem 10.463 GB
+Calculating loss...:   0%|          | 0/6 [00:00<?, ?it/s]Calculating loss...:  17%|█▋        | 1/6 [00:00<00:04,  1.03it/s]Calculating loss...:  33%|███▎      | 2/6 [00:01<00:03,  1.08it/s]Calculating loss...:  50%|█████     | 3/6 [00:02<00:02,  1.02it/s]Calculating loss...:  67%|██████▋   | 4/6 [00:03<00:02,  1.01s/it]Calculating loss...:  83%|████████▎ | 5/6 [00:04<00:00,  1.00it/s]Calculating loss...: 100%|██████████| 6/6 [00:06<00:00,  1.02s/it]Calculating loss...: 100%|██████████| 6/6 [00:06<00:00,  1.00s/it]
+Iter 30: Val loss 1.605, Val took 6.004s
+Iter 30: Train loss 1.627, Learning Rate 1.000e-05, It/sec 0.611, Tokens/sec 483.089, Trained Tokens 23769, Peak mem 10.463 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 139810.13it/s]
+Loading datasets
+Training
+Loading fine-tuned weights from /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors
+Trainable parameters: 0.216% (6.947M/3212.750M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/9 [00:00<?, ?it/s]Calculating loss...:  11%|█         | 1/9 [00:01<00:08,  1.03s/it]Calculating loss...:  22%|██▏       | 2/9 [00:02<00:07,  1.04s/it]Calculating loss...:  33%|███▎      | 3/9 [00:03<00:06,  1.05s/it]Calculating loss...:  44%|████▍     | 4/9 [00:04<00:05,  1.05s/it]Calculating loss...:  56%|█████▌    | 5/9 [00:05<00:03,  1.01it/s]Calculating loss...:  67%|██████▋   | 6/9 [00:05<00:02,  1.04it/s]Calculating loss...:  78%|███████▊  | 7/9 [00:06<00:01,  1.04it/s]Calculating loss...:  89%|████████▉ | 8/9 [00:07<00:00,  1.03it/s]Calculating loss...: 100%|██████████| 9/9 [00:08<00:00,  1.03it/s]Calculating loss...: 100%|██████████| 9/9 [00:08<00:00,  1.01it/s]
+Iter 1: Val loss 1.669, Val took 8.904s
+Iter 10: Train loss 1.567, Learning Rate 1.000e-05, It/sec 0.604, Tokens/sec 471.448, Trained Tokens 7803, Peak mem 10.463 GB
+Iter 20: Train loss 1.549, Learning Rate 1.000e-05, It/sec 0.593, Tokens/sec 472.925, Trained Tokens 15776, Peak mem 10.463 GB
+Calculating loss...:   0%|          | 0/9 [00:00<?, ?it/s]Calculating loss...:  11%|█         | 1/9 [00:00<00:07,  1.03it/s]Calculating loss...:  22%|██▏       | 2/9 [00:01<00:06,  1.03it/s]Calculating loss...:  33%|███▎      | 3/9 [00:02<00:05,  1.03it/s]Calculating loss...:  44%|████▍     | 4/9 [00:03<00:04,  1.03it/s]Calculating loss...:  56%|█████▌    | 5/9 [00:04<00:04,  1.00s/it]Calculating loss...:  67%|██████▋   | 6/9 [00:05<00:03,  1.02s/it]Calculating loss...:  78%|███████▊  | 7/9 [00:07<00:02,  1.03s/it]Calculating loss...:  89%|████████▉ | 8/9 [00:07<00:00,  1.01it/s]Calculating loss...: 100%|██████████| 9/9 [00:08<00:00,  1.04it/s]Calculating loss...: 100%|██████████| 9/9 [00:08<00:00,  1.02it/s]
+Iter 30: Val loss 1.659, Val took 8.844s
+Iter 30: Train loss 1.656, Learning Rate 1.000e-05, It/sec 0.607, Tokens/sec 482.382, Trained Tokens 23724, Peak mem 10.463 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 152125.02it/s]
+Loading datasets
+Training
+Loading fine-tuned weights from /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors
+Trainable parameters: 0.216% (6.947M/3212.750M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/12 [00:00<?, ?it/s]Calculating loss...:   8%|▊         | 1/12 [00:01<00:12,  1.10s/it]Calculating loss...:  17%|█▋        | 2/12 [00:02<00:10,  1.07s/it]Calculating loss...:  25%|██▌       | 3/12 [00:03<00:08,  1.01it/s]Calculating loss...:  33%|███▎      | 4/12 [00:04<00:08,  1.02s/it]Calculating loss...:  42%|████▏     | 5/12 [00:05<00:07,  1.00s/it]Calculating loss...:  50%|█████     | 6/12 [00:06<00:06,  1.02s/it]Calculating loss...:  58%|█████▊    | 7/12 [00:07<00:05,  1.05s/it]Calculating loss...:  67%|██████▋   | 8/12 [00:08<00:04,  1.03s/it]Calculating loss...:  75%|███████▌  | 9/12 [00:09<00:03,  1.01s/it]Calculating loss...:  83%|████████▎ | 10/12 [00:10<00:02,  1.00s/it]Calculating loss...:  92%|█████████▏| 11/12 [00:11<00:00,  1.01it/s]Calculating loss...: 100%|██████████| 12/12 [00:12<00:00,  1.03it/s]Calculating loss...: 100%|██████████| 12/12 [00:12<00:00,  1.01s/it]
+Iter 1: Val loss 1.777, Val took 12.078s
+Iter 10: Train loss 1.365, Learning Rate 1.000e-05, It/sec 0.598, Tokens/sec 477.069, Trained Tokens 7979, Peak mem 10.463 GB
+Iter 20: Train loss 1.660, Learning Rate 1.000e-05, It/sec 0.613, Tokens/sec 480.742, Trained Tokens 15826, Peak mem 10.463 GB
+Calculating loss...:   0%|          | 0/12 [00:00<?, ?it/s]Calculating loss...:   8%|▊         | 1/12 [00:00<00:10,  1.03it/s]Calculating loss...:  17%|█▋        | 2/12 [00:01<00:09,  1.03it/s]Calculating loss...:  25%|██▌       | 3/12 [00:02<00:08,  1.06it/s]Calculating loss...:  33%|███▎      | 4/12 [00:03<00:07,  1.05it/s]Calculating loss...:  42%|████▏     | 5/12 [00:04<00:06,  1.01it/s]Calculating loss...:  50%|█████     | 6/12 [00:05<00:06,  1.01s/it]Calculating loss...:  58%|█████▊    | 7/12 [00:06<00:05,  1.02s/it]Calculating loss...:  67%|██████▋   | 8/12 [00:08<00:04,  1.03s/it]Calculating loss...:  75%|███████▌  | 9/12 [00:08<00:03,  1.01s/it]Calculating loss...:  83%|████████▎ | 10/12 [00:09<00:01,  1.02it/s]Calculating loss...:  92%|█████████▏| 11/12 [00:11<00:01,  1.02s/it]Calculating loss...: 100%|██████████| 12/12 [00:11<00:00,  1.01s/it]Calculating loss...: 100%|██████████| 12/12 [00:11<00:00,  1.00it/s]
+Iter 30: Val loss 1.798, Val took 11.984s
+Iter 30: Train loss 1.350, Learning Rate 1.000e-05, It/sec 0.584, Tokens/sec 472.609, Trained Tokens 23916, Peak mem 10.463 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 152125.02it/s]
+Loading datasets
+Training
+Loading fine-tuned weights from /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors
+Trainable parameters: 0.216% (6.947M/3212.750M)
+Starting training..., iters: 30
+Calculating loss...:   0%|          | 0/15 [00:00<?, ?it/s]Calculating loss...:   7%|▋         | 1/15 [00:00<00:13,  1.04it/s]Calculating loss...:  13%|█▎        | 2/15 [00:02<00:13,  1.01s/it]Calculating loss...:  20%|██        | 3/15 [00:02<00:11,  1.00it/s]Calculating loss...:  27%|██▋       | 4/15 [00:04<00:11,  1.02s/it]Calculating loss...:  33%|███▎      | 5/15 [00:05<00:10,  1.00s/it]Calculating loss...:  40%|████      | 6/15 [00:06<00:09,  1.02s/it]Calculating loss...:  47%|████▋     | 7/15 [00:07<00:08,  1.00s/it]Calculating loss...:  53%|█████▎    | 8/15 [00:08<00:06,  1.01it/s]Calculating loss...:  60%|██████    | 9/15 [00:09<00:06,  1.04s/it]Calculating loss...:  67%|██████▋   | 10/15 [00:10<00:05,  1.04s/it]Calculating loss...:  73%|███████▎  | 11/15 [00:11<00:04,  1.04s/it]Calculating loss...:  80%|████████  | 12/15 [00:12<00:03,  1.02s/it]Calculating loss...:  87%|████████▋ | 13/15 [00:13<00:02,  1.03s/it]Calculating loss...:  93%|█████████▎| 14/15 [00:14<00:00,  1.01it/s]Calculating loss...: 100%|██████████| 15/15 [00:15<00:00,  1.01s/it]Calculating loss...: 100%|██████████| 15/15 [00:15<00:00,  1.01s/it]
+Iter 1: Val loss 1.857, Val took 15.210s
+Iter 10: Train loss 1.572, Learning Rate 1.000e-05, It/sec 0.576, Tokens/sec 468.910, Trained Tokens 8135, Peak mem 10.743 GB
+Iter 20: Train loss 1.477, Learning Rate 1.000e-05, It/sec 0.574, Tokens/sec 474.195, Trained Tokens 16392, Peak mem 10.743 GB
+Calculating loss...:   0%|          | 0/15 [00:00<?, ?it/s]Calculating loss...:   7%|▋         | 1/15 [00:00<00:13,  1.03it/s]Calculating loss...:  13%|█▎        | 2/15 [00:02<00:13,  1.02s/it]Calculating loss...:  20%|██        | 3/15 [00:02<00:11,  1.00it/s]Calculating loss...:  27%|██▋       | 4/15 [00:04<00:11,  1.02s/it]Calculating loss...:  33%|███▎      | 5/15 [00:04<00:09,  1.03it/s]Calculating loss...:  40%|████      | 6/15 [00:05<00:08,  1.00it/s]Calculating loss...:  47%|████▋     | 7/15 [00:06<00:07,  1.01it/s]Calculating loss...:  53%|█████▎    | 8/15 [00:07<00:06,  1.02it/s]Calculating loss...:  60%|██████    | 9/15 [00:08<00:06,  1.00s/it]Calculating loss...:  67%|██████▋   | 10/15 [00:09<00:04,  1.03it/s]Calculating loss...:  73%|███████▎  | 11/15 [00:10<00:03,  1.03it/s]Calculating loss...:  80%|████████  | 12/15 [00:11<00:02,  1.00it/s]Calculating loss...:  87%|████████▋ | 13/15 [00:13<00:02,  1.03s/it]Calculating loss...:  93%|█████████▎| 14/15 [00:14<00:01,  1.04s/it]Calculating loss...: 100%|██████████| 15/15 [00:15<00:00,  1.04s/it]Calculating loss...: 100%|██████████| 15/15 [00:15<00:00,  1.01s/it]
+Iter 30: Val loss 1.880, Val took 15.120s
+Iter 30: Train loss 1.139, Learning Rate 1.000e-05, It/sec 0.616, Tokens/sec 482.140, Trained Tokens 24218, Peak mem 10.743 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[PATCH] iterate_batches replaced with ordered (sequential) version
+Loading pretrained model
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 122333.87it/s]
+Loading datasets
+Training
+Trainable parameters: 0.216% (6.947M/3212.750M)
+Starting training..., iters: 135
+Calculating loss...:   0%|          | 0/15 [00:00<?, ?it/s]Calculating loss...:   7%|▋         | 1/15 [00:00<00:13,  1.05it/s]Calculating loss...:  13%|█▎        | 2/15 [00:02<00:13,  1.01s/it]Calculating loss...:  20%|██        | 3/15 [00:02<00:11,  1.01it/s]Calculating loss...:  27%|██▋       | 4/15 [00:04<00:11,  1.02s/it]Calculating loss...:  33%|███▎      | 5/15 [00:05<00:10,  1.00s/it]Calculating loss...:  40%|████      | 6/15 [00:06<00:09,  1.04s/it]Calculating loss...:  47%|████▋     | 7/15 [00:07<00:08,  1.02s/it]Calculating loss...:  53%|█████▎    | 8/15 [00:08<00:07,  1.03s/it]Calculating loss...:  60%|██████    | 9/15 [00:09<00:06,  1.04s/it]Calculating loss...:  67%|██████▋   | 10/15 [00:10<00:05,  1.02s/it]Calculating loss...:  73%|███████▎  | 11/15 [00:11<00:03,  1.02it/s]Calculating loss...:  80%|████████  | 12/15 [00:12<00:02,  1.02it/s]Calculating loss...:  87%|████████▋ | 13/15 [00:13<00:02,  1.00s/it]Calculating loss...:  93%|█████████▎| 14/15 [00:14<00:01,  1.02s/it]Calculating loss...: 100%|██████████| 15/15 [00:15<00:00,  1.03s/it]Calculating loss...: 100%|██████████| 15/15 [00:15<00:00,  1.01s/it]
+Iter 1: Val loss 2.832, Val took 15.222s
+Iter 10: Train loss 2.511, Learning Rate 1.000e-05, It/sec 0.594, Tokens/sec 473.108, Trained Tokens 7960, Peak mem 10.463 GB
+Iter 20: Train loss 2.079, Learning Rate 1.000e-05, It/sec 0.576, Tokens/sec 476.317, Trained Tokens 16234, Peak mem 10.463 GB
+Iter 30: Train loss 1.957, Learning Rate 1.000e-05, It/sec 0.585, Tokens/sec 475.086, Trained Tokens 24362, Peak mem 10.463 GB
+Iter 40: Train loss 1.952, Learning Rate 1.000e-05, It/sec 0.596, Tokens/sec 476.983, Trained Tokens 32370, Peak mem 10.743 GB
+Iter 50: Train loss 1.944, Learning Rate 1.000e-05, It/sec 0.599, Tokens/sec 475.729, Trained Tokens 40316, Peak mem 10.743 GB
+Iter 60: Train loss 1.831, Learning Rate 1.000e-05, It/sec 0.582, Tokens/sec 472.189, Trained Tokens 48434, Peak mem 10.743 GB
+Iter 70: Train loss 1.928, Learning Rate 1.000e-05, It/sec 0.568, Tokens/sec 467.532, Trained Tokens 56667, Peak mem 10.743 GB
+Iter 80: Train loss 1.939, Learning Rate 1.000e-05, It/sec 0.578, Tokens/sec 468.836, Trained Tokens 64776, Peak mem 10.743 GB
+Iter 90: Train loss 1.836, Learning Rate 1.000e-05, It/sec 0.598, Tokens/sec 482.396, Trained Tokens 72845, Peak mem 10.743 GB
+Iter 100: Train loss 1.917, Learning Rate 1.000e-05, It/sec 0.591, Tokens/sec 474.053, Trained Tokens 80864, Peak mem 10.743 GB
+Iter 100: Saved adapter weights to /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-reverse-sft-1ep/adapters/adapters.safetensors and /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-reverse-sft-1ep/adapters/0000100_adapters.safetensors.
+Iter 110: Train loss 1.742, Learning Rate 1.000e-05, It/sec 0.598, Tokens/sec 475.379, Trained Tokens 88811, Peak mem 10.743 GB
+Iter 120: Train loss 1.858, Learning Rate 1.000e-05, It/sec 0.572, Tokens/sec 471.543, Trained Tokens 97054, Peak mem 10.743 GB
+Iter 130: Train loss 1.606, Learning Rate 1.000e-05, It/sec 0.590, Tokens/sec 475.712, Trained Tokens 105122, Peak mem 10.771 GB
+Calculating loss...:   0%|          | 0/15 [00:00<?, ?it/s]Calculating loss...:   7%|▋         | 1/15 [00:01<00:14,  1.05s/it]Calculating loss...:  13%|█▎        | 2/15 [00:02<00:13,  1.00s/it]Calculating loss...:  20%|██        | 3/15 [00:02<00:11,  1.01it/s]Calculating loss...:  27%|██▋       | 4/15 [00:03<00:10,  1.05it/s]Calculating loss...:  33%|███▎      | 5/15 [00:04<00:09,  1.07it/s]Calculating loss...:  40%|████      | 6/15 [00:05<00:08,  1.00it/s]Calculating loss...:  47%|████▋     | 7/15 [00:06<00:07,  1.01it/s]Calculating loss...:  53%|█████▎    | 8/15 [00:07<00:06,  1.02it/s]Calculating loss...:  60%|██████    | 9/15 [00:08<00:06,  1.00s/it]Calculating loss...:  67%|██████▋   | 10/15 [00:09<00:05,  1.02s/it]Calculating loss...:  73%|███████▎  | 11/15 [00:10<00:04,  1.00s/it]Calculating loss...:  80%|████████  | 12/15 [00:11<00:03,  1.02s/it]Calculating loss...:  87%|████████▋ | 13/15 [00:12<00:02,  1.02s/it]Calculating loss...:  93%|█████████▎| 14/15 [00:14<00:01,  1.03s/it]Calculating loss...: 100%|██████████| 15/15 [00:15<00:00,  1.04s/it]Calculating loss...: 100%|██████████| 15/15 [00:15<00:00,  1.01s/it]
+Iter 135: Val loss 1.784, Val took 15.098s
+Iter 135: Train loss 1.945, Learning Rate 1.000e-05, It/sec 1.160, Tokens/sec 477.734, Trained Tokens 109241, Peak mem 10.771 GB
+Saved final weights to /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-reverse-sft-1ep/adapters/adapters.safetensors.
+/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+############################################################
+  ARCHITECTURE: llama3b (mlx-community/Llama-3.2-3B-Instruct)
+############################################################
+
+============================================================
+STAGE-GATED TRAINING: llama3b (mlx-community/Llama-3.2-3B-Instruct)
+============================================================
+
+  Gate 1/5: stages 1-1, 54 train, 6 valid
+  Gate 1 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors
+
+  Gate 2/5: stages 1-2, 108 train, 12 valid
+  Gate 2 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors
+
+  Gate 3/5: stages 1-3, 162 train, 18 valid
+  Gate 3 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors
+
+  Gate 4/5: stages 1-4, 216 train, 24 valid
+  Gate 4 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors
+
+  Gate 5/5: stages 1-5, 270 train, 30 valid
+  Gate 5 complete. Adapter: /Users/rishimanglesh/Projects/darshana_llm/models/llama3b-gated-sft-1ep/adapters/adapters.safetensors
+
+  GATED TRAINING COMPLETE: llama3b
+
+============================================================
+REVERSE TRAINING: llama3b (mlx-community/Llama-3.2-3B-Instruct)
+  270 train, 135 iters (1 epoch)
+============================================================
+
+  REVERSE TRAINING COMPLETE: llama3b
+
+============================================================
+GENERATING RESPONSES: llama3b
+  200 questions × 3 configs = 600 total
+  Already done: 0
+============================================================
+
+  Loading base_llama3b...
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 125470.63it/s]
+  Progress: 50/600
+  Progress: 100/600
+  Progress: 150/600
+  Progress: 200/600
+
+  Loading gated_llama3b...
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 92038.02it/s]
+  Progress: 250/600
+  Progress: 300/600
+  Progress: 350/600
+  Progress: 400/600
+
+  Loading reverse_llama3b...
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 33026.02it/s]
+Traceback (most recent call last):
+  File "/Users/rishimanglesh/Projects/darshana_llm/run_cross_arch.py", line 537, in <module>
+    proven_count = sum(1 for r in all_results.values() if r.get("ci_lo", 0) > 0.5)
+  File "/Users/rishimanglesh/Projects/darshana_llm/run_cross_arch.py", line 484, in main
+    print(f"  ARCHITECTURE: {arch_key} ({arch['model_id']})")
+  File "/Users/rishimanglesh/Projects/darshana_llm/run_cross_arch.py", line 251, in generate_responses
+    print(f"GENERATING RESPONSES: {arch_key}")
+  File "/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/mlx_lm/utils.py", line 324, in load
+    model = load_adapters(model, adapter_path)
+  File "/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/mlx_lm/utils.py", line 259, in load_adapters
+    return _load_adapters(model, adapter_path)
+  File "/Users/rishimanglesh/Library/Python/3.9/lib/python/site-packages/mlx_lm/tuner/utils.py", line 127, in load_adapters
+    with open(adapter_path / "adapter_config.json", "r") as fid:
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/rishimanglesh/Projects/darshana_llm/models/llama3b-reverse-sft-1ep/adapters/adapter_config.json'
