@@ -1,8 +1,36 @@
-# darshana_llm — Rigorous Validation of 7 Darshanas
+# darshana_llm — Validation Phase
 
-Research project testing whether the 7 Darshanas (schools of Indian philosophy) provide **specific, measurable value** when mapped to LLM stack layers — or whether generic equivalents work just as well.
+**Controlled validation of the Darshana Framework for LLMs.** This repo contains the validation-phase experiments (9 experiments, ~3,000 generations, 3 model architectures) that test whether the six classical Indian philosophical schools (*Shad Darshana*: Nyaya, Vaisheshika, Samkhya, Yoga, Mimamsa, Vedanta) provide measurable engineering value when mapped to specific LLM stack layers — each tested against equal-sophistication generic controls.
 
-Successor to **vedic_llm** (8 phases, 1,959+ generations, 13 experiments).
+The exploration-phase experiments are in [vedic_llm](https://github.com/rishi-manglesh/vedic_llm). Both repos are part of the same research program; the paper draws on both.
+
+## Paper
+
+Manglesh, R.R. (2026). *Darshana: A Six-School Interpretation Framework for Large Language Model Orchestration and Training*. Preprint.
+
+```bibtex
+@article{manglesh2026darshana,
+  title  = {Darshana: A Six-School Interpretation Framework for Large Language Model Orchestration and Training},
+  author = {Manglesh, Rishi Raj},
+  year   = {2026},
+  note   = {Preprint}
+}
+```
+
+## Headline results
+
+All five orchestration-layer Darshanas outperformed equal-sophistication generic controls. Cross-judge validation (GPT-4o) confirmed the advantage at 60–67%, with same-model bias estimated at 15–20pp.
+
+| Experiment | Darshana | LLM Layer | Win Rate (Sonnet / GPT-4o) |
+|---|---|---|---|
+| E1 | Vritti (from Yoga) | Epistemic self-classification (system prompt) | 83% / 60% |
+| E2 | Nyaya | Tool routing via 4 Pramanas | 93% / — |
+| E3 | Mimamsa | Query rewriting (6 Lingas) | 82% / 67% |
+| E4 | Vaisheshika | Knowledge ontology (7 Padarthas + Abhava) | 71% h2h |
+| E5 | Vedanta | Output synthesis (Brahman/Maya/Atman) | 82% / 63% |
+| E8 | Yoga | Stage-gated SFT (Ashtanga progression) | 60–62% across Qwen 3B, LLaMA 3B, Phi 3.5 |
+
+**Layer assignment is the critical variable:** Mimamsa scored 0% when applied at runtime (as system prompt) but 82% when applied as a query rewriter. Same technique, different layer. This is the central methodological finding.
 
 ## Research Framework: Nyaya Pancha-avayava
 
@@ -44,17 +72,49 @@ Every experiment follows the 5-step Nyaya syllogism:
 | Samkhya | NEVER BUILT | No experiment exists |
 | Yoga | NEVER BUILT | No experiment exists |
 
-## Current Results (darshana_llm Experiments 1-5)
+## Current Results (darshana_llm Experiments 1-5, 9)
 
-| Exp | Darshana | Result | Win Rate | Key Finding |
-|-----|----------|--------|----------|-------------|
-| 1 | Vritti | **PROVEN** | 83% | Epistemic taxonomy > generic confidence tagging |
-| 2 | Nyaya | **PROVEN** | 93% | Pramana routing: only 30% need search (70% reduction) |
-| 3 | Mimamsa | **PROVEN** | 82% | 6 Lingas rewriting > generic prompt engineering |
-| 4 | Vaisheshika | **PROVEN** | 71% (h2h) | 7-category ontology > generic ontology on real vault corpus (v4: factual 82%, causal 70%, gap 61%) |
-| 5 | Vedanta | **PROVEN** | 82% | Brahman/Maya/Atman synthesis > generic cleanup |
+| Exp | Darshana | Result | Win Rate (Sonnet) | Win Rate (GPT-4o) | Key Finding |
+|-----|----------|--------|-------------------|-------------------|-------------|
+| 1 | Vritti | **Validated** | 83% | 60% | Epistemic taxonomy > generic confidence tagging |
+| 2 | Nyaya | **Validated** | 93% | — | Pramana routing: only 30% need search (70% reduction) |
+| 3 | Mimamsa | **Validated** | 82% | 67% | 6 Lingas rewriting > generic prompt engineering |
+| 4 | Vaisheshika | **Validated** | 71% (h2h) | — | 7-category ontology > generic ontology on real vault corpus |
+| 5 | Vedanta | **Validated** | 82% | 63% | Brahman/Maya/Atman synthesis > generic cleanup |
+| 9a | Vritti (placebo) | **Taxonomy > structure** | 63% | — | Vritti labels vs neutral TYPE-A/B/C/D/E: taxonomy content matters |
+| 9b | — (placebo) | Structure helps | 53% | — | Neutral labels vs generic: structure alone provides modest lift |
 
-**5/5 Darshanas PROVEN** with proper generic controls. Exp 4 evolved through 4 versions: v1 (judge framework, INCONCLUSIVE), v2 (Wikipedia KG, 63% h2h but wrong corpus), v3 (synthetic org corpus, 63% h2h), v4 (real vault corpus + English labels, 71% h2h with factual 82%, causal 70%, gap 61%).
+All 5 orchestration components outperformed equal-sophistication generic controls. Cross-judge validation (GPT-4o) confirms Darshana advantage at lower rates (60-67% vs 82-83%). Same-model bias estimated at 15-20pp. Structure-only placebo tested: neutral labels beat generic (53%) but Vritti taxonomy beats neutral labels (63%), confirming taxonomy content matters beyond structure alone.
+
+Exp 4 evolved through 4 versions: v1 (judge framework, INCONCLUSIVE), v2 (Wikipedia KG, 63% h2h but wrong corpus), v3 (synthetic org corpus, 63% h2h), v4 (real vault corpus + English labels, 71% h2h with factual 82%, causal 70%, gap 61%).
+
+**Training experiments (Exp 6-7):** DPO failed — base model won 70-75% against all trained variants. See vedic_llm Exp 8 (separate repo) for successful SFT curriculum results.
+
+### Cross-Judge Validation (Exp 9)
+
+GPT-4o re-judged all 90 pairs from Experiments 1, 3, and 5 to test for same-model bias (Sonnet judging Sonnet-generated outputs).
+
+**Cross-judge results:**
+
+| Experiment | Sonnet Win Rate | GPT-4o Win Rate | Delta | GPT-4o Confirms? |
+|------------|----------------|-----------------|-------|------------------|
+| Vritti (Exp 1) | 83% | 60% (18/30) | -23pp | **Yes** (>50%) |
+| Mimamsa (Exp 3) | 82% | 67% (20/30) | -15pp | **Yes** (>50%) |
+| Vedanta (Exp 5) | 82% | 63% (19/30) | -19pp | **Yes** (>50%) |
+
+- **Inter-judge agreement:** 51% (judges agree on specific pairs about half the time)
+- **Same-model bias:** Estimated 15-20pp. Sonnet's advantage appears in reasoning_depth and usefulness dimensions — Sonnet values epistemic structure, GPT-4o values information density.
+- **Key finding:** GPT-4o independently confirms Darshana advantage (all >50%) but at lower rates. The effect is real; the magnitude depends on what the judge values.
+
+**Structure-only placebo (Exp 9a):**
+
+| Comparison | Win Rate (30 pairs) | Interpretation |
+|------------|---------------------|----------------|
+| Vritti labels vs Generic | 60% (18/30) | Full taxonomy > no structure |
+| Neutral TYPE-A/B/C/D/E vs Generic | 53% (16/30) | Structure alone provides modest lift |
+| Vritti labels vs Neutral labels | 63% (19/30) | **Taxonomy content matters beyond structure** |
+
+The 10pp gap between Vritti (63%) and neutral placebo (53%) against each other's baselines — and the direct 63% h2h — confirms that the Sanskrit epistemic taxonomy contributes value beyond the mere act of structured labeling.
 
 ## Cross-Model Validation
 
@@ -107,7 +167,8 @@ Do the techniques generalize beyond Claude? Tested on open-source Qwen3 models r
 
 ```bash
 # Setup
-cd /Users/rishimanglesh/Projects/darshana_llm
+git clone https://github.com/rishi-manglesh/darshana_llm.git
+cd darshana_llm
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
@@ -220,13 +281,25 @@ For each experiment:
 1. Results written to `results/exp{N}_{name}/results.jsonl`
 2. Each result includes all dimension scores + winner
 3. Summary report with PRATIJNA→NIGAMANA format
-4. Honest assessment: PROVEN / DISPROVEN / INCONCLUSIVE
+4. Honest assessment: VALIDATED / FAILED / INCONCLUSIVE
 
-After all 7 experiments: only PROVEN Darshanas go into the integrated pipeline.
+After all 7 experiments: only validated Darshanas go into the integrated pipeline. Training experiments (Exp 6-7) failed — DPO approach did not produce improvements over base model.
+
+## Citation
+
+If you use this work, please cite the paper:
+
+```bibtex
+@article{manglesh2026darshana,
+  title  = {Darshana: A Six-School Interpretation Framework for Large Language Model Orchestration and Training},
+  author = {Manglesh, Rishi Raj},
+  year   = {2026},
+  note   = {Preprint}
+}
+```
 
 ## Version
 
 - **Created:** 2026-02-19
-- **Updated:** 2026-02-21 (v6.1 — Cross-model validation complete. 2/3 techniques generalize to open-source (within-model). Framework does NOT bridge frontier gap — Sonnet wins 80-100% of direct matchups.)
-- **Predecessor:** vedic_llm (archived, 8 phases complete)
-- **Owner:** Rishi Raj Manglesh
+- **Updated:** 2026-05-20 (positioning aligned with published Darshana paper; companion repo: [vedic_llm](https://github.com/rishi-manglesh/vedic_llm) — exploration phase)
+- **Author:** Rishi Raj Manglesh — rm@hundredsolutions.com
