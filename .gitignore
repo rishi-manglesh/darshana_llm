@@ -38,3 +38,19 @@ Thumbs.db
 
 # API keys
 .env
+
+# Local run logs (not part of the paper record)
+overnight_*.log
+overnight_*.txt
+*_nohup.log
+results/*nohup.log
+results/*resume.log
+results/monitor_log*
+results/overnight_*
+
+# Local run scripts (host-specific paths)
+run_overnight*.sh
+monitor_overnight.sh
+
+# Corrupted filenames from rsync/Time Machine
+*\r\r
