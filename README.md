@@ -6,11 +6,11 @@ The exploration-phase experiments are in [vedic_llm](https://github.com/rishi-ma
 
 ## Paper
 
-Manglesh, R.R. (2026). *Darshana: A Six-School Interpretation Framework for Large Language Model Orchestration and Training*. Preprint.
+Manglesh, R.R. (2026). *Darshana: A Six-School Framework for Large Language Model Orchestration and Training*. Preprint.
 
 ```bibtex
 @article{manglesh2026darshana,
-  title  = {Darshana: A Six-School Interpretation Framework for Large Language Model Orchestration and Training},
+  title  = {Darshana: A Six-School Framework for Large Language Model Orchestration and Training},
   author = {Manglesh, Rishi Raj},
   year   = {2026},
   note   = {Preprint}
@@ -291,7 +291,7 @@ If you use this work, please cite the paper:
 
 ```bibtex
 @article{manglesh2026darshana,
-  title  = {Darshana: A Six-School Interpretation Framework for Large Language Model Orchestration and Training},
+  title  = {Darshana: A Six-School Framework for Large Language Model Orchestration and Training},
   author = {Manglesh, Rishi Raj},
   year   = {2026},
   note   = {Preprint}
